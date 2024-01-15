@@ -17,6 +17,8 @@
 #include "sql/optimizer/ob_log_plan.h"
 #include "sql/optimizer/ob_sharding_info.h"
 
+/** Note:并行查询中生成逻辑子计划(LogicPlan)
+*/
 namespace oceanbase
 {
 namespace sql

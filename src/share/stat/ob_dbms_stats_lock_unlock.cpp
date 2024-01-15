@@ -52,6 +52,11 @@ namespace common {
 #define GET_INDEX_LOCKED_PARTITION_STAT "select partition_id, stattype_locked from __all_table_stat \
                                   where %s and tenant_id = %lu and table_id in (%lu, %lu);"
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::lock_table_stats
+*/
 int ObDbmsStatsLockUnlock::set_table_stats_lock(ObExecContext &ctx,
                                                 const ObTableStatParam &param,
                                                 bool set_locked)
@@ -191,7 +196,7 @@ int ObDbmsStatsLockUnlock::get_stats_history_sql(ObExecContext &ctx,
       //before lock, we need record history stats.
       if (OB_FAIL(ObDbmsStatsHistoryManager::get_history_stat_handles(ctx, param,
                                                                       history_tab_handles,
-                                                                      history_col_handles))) {
+                                                                      history_col_handles))) {// Note:
         LOG_WARN("failed to get history stats", K(ret));
       } else {/*do nothing*/}
     }
@@ -199,6 +204,13 @@ int ObDbmsStatsLockUnlock::get_stats_history_sql(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::update_online_stat
+ * sql/engine/cmd/ob_analyze_executor.cpp/ObAnalyzeExecutor::execute
+*/
 int ObDbmsStatsLockUnlock::check_stat_locked(ObExecContext &ctx,
                                              ObTableStatParam &param)
 {
@@ -244,6 +256,11 @@ int ObDbmsStatsLockUnlock::check_stat_locked(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_table_stats
+*/
 int ObDbmsStatsLockUnlock::fill_stat_locked(ObExecContext &ctx,
                                             ObTableStatParam &param)
 {
@@ -402,6 +419,12 @@ int ObDbmsStatsLockUnlock::gen_partition_list(const ObTableStatParam &param,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_table_stats_with_default_param
+*/
 int ObDbmsStatsLockUnlock::adjust_table_stat_param(const ObIArray<int64_t> &locked_partition_ids,
                                                    ObTableStatParam &param)
 {
@@ -603,6 +626,12 @@ int ObDbmsStatsLockUnlock::get_no_stats_partition_ids(const StatTypeLocked statt
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::reset_table_locked_state
+*/
 int ObDbmsStatsLockUnlock::get_insert_locked_type_sql(const ObTableStatParam &param,
                                                       const ObIArray<int64_t> &no_stats_partition_ids,
                                                       const ObIArray<uint64_t> &part_stattypes,

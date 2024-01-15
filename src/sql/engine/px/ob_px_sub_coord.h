@@ -30,7 +30,24 @@
 #include "sql/ob_sql_trans_control.h"
 #include "lib/allocator/ob_safe_arena.h"
 
-
+/** Note:SQC(Sub Query Coordinator)接口(并行查询执行接口)
+ * QC:
+ * 创建SQC
+ * 下发配置信息创建Channel map逻辑通道
+ * 全局调度SQC
+ * SQC:接收调度消息,启动worker线程并对worker进行全周期管理
+ * 
+ * ObPxCoord会分析每个DFO位于哪些机器上以及每个机器上应该分配多少个线程执行它们,
+ * 然后将它们发送到对应机器上执行.
+ * 为了减少RPC的次数,每台机器上无论启动多少个线程,都只发送一个RPC,
+ * RPC的processor我们称之为SQC,它会负责将DFO提交到多个线程上并行执行
+ * 
+ * 调用:
+ * ob_px_sqc_proxy.h
+ * ob_px_worker.cpp
+ * 被调用:
+ * ob_px_rpc_processor.cpp,RPC的处理用SQC类来管理
+*/
 namespace oceanbase
 {
 namespace observer

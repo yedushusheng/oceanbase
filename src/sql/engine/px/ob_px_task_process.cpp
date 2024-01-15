@@ -94,6 +94,10 @@ void ObPxTaskProcess::operator()(void)
 }
 
 // The Tenant Px Pool will invoke this function
+/** Note:外部接口
+ * 调用:
+ * ob_px_worker.cpp/PxWorkerFunctor::operator
+*/
 void ObPxTaskProcess::run()
 {
   int ret = OB_SUCCESS;
@@ -122,6 +126,11 @@ void ObPxTaskProcess::run()
   UNUSED(ret);
 }
 
+/** Note:外部接口 内部函数
+ * 调用:
+ * ob_px_worker.cpp/PObPxLocalWorker::run
+ * ObPxTaskProcess::run
+*/
 int ObPxTaskProcess::process()
 {
   ObActiveSessionGuard::get_stat().in_px_execution_ = true;
@@ -234,6 +243,8 @@ int ObPxTaskProcess::process()
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObPxTaskProcess::execute(ObOpSpec &root_spec)
 {
   int ret = OB_SUCCESS;
@@ -332,6 +343,13 @@ int ObPxTaskProcess::execute(ObOpSpec &root_spec)
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:具体执行Task处理
+ * 调用:
+ * ObPxTaskProcess::run()
+ * ->ObPxTaskProcess::process()
+ *  ->ObPxTaskProcess::do_process()
+*/
 int ObPxTaskProcess::do_process()
 {
   LOG_TRACE("[CMD] run task", "task", arg_.task_);

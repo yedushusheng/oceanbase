@@ -659,6 +659,8 @@ int64_t ObPxSQCProxy::get_query_timeout_ts()
 
 int64_t ObPxSQCProxy::get_task_count() const { return sqc_ctx_.get_task_count(); }
 
+/** Note:内部函数
+*/
 int ObPxSQCProxy::sync_wait_all(ObPxDatahubDataProvider &provider)
 {
   int ret = OB_SUCCESS;
@@ -684,7 +686,7 @@ int ObPxSQCProxy::sync_wait_all(ObPxDatahubDataProvider &provider)
           ObInterruptCode &code = GET_INTERRUPT_CODE();
           ret = code.code_;
           LOG_WARN("message loop is interrupted", K(code), K(ret));
-        } else if (OB_FAIL(THIS_WORKER.check_status())) {
+        } else if (OB_FAIL(THIS_WORKER.check_status())) {// Note:
           LOG_WARN("failed to sync wait", K(ret), K(task_cnt), K(provider.dh_msg_cnt_));
         }
       }
@@ -694,6 +696,10 @@ int ObPxSQCProxy::sync_wait_all(ObPxDatahubDataProvider &provider)
   return ret;
 }
 
+/** Note:内部函数
+ * 调用:
+ * 未调用
+*/
 int ObPxSQCProxy::construct_p2p_dh_map(ObP2PDhMapInfo &map_info)
 {
   int ret = OB_SUCCESS;
@@ -719,6 +725,11 @@ int ObPxSQCProxy::construct_p2p_dh_map(ObP2PDhMapInfo &map_info)
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_join_filter_op.cpp/ObJoinFilterOp::mark_not_need_send_bf_msg
+ * ob_join_filter_op.cpp/ObJoinFilterOp::try_merge_join_filter
+*/
 int ObPxSQCProxy::check_is_local_dh(int64_t p2p_dh_id, bool &is_local, int64_t msg_cnt)
 {
   int ret = OB_SUCCESS;

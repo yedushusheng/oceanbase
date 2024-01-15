@@ -25,7 +25,12 @@
 #include "sql/engine/px/ob_dfo.h"
 #include "sql/engine/px/ob_px_rpc_proxy.h"
 #include "sql/session/ob_sql_session_info.h"
-
+/** Note:SQC异步代理接口
+ * 调用:
+ * 
+ * 被调用:
+ * ob_dfo_scheduler.cpp
+*/
 namespace oceanbase {
 
 using namespace common;

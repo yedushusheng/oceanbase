@@ -17,7 +17,8 @@
 #include "sql/engine/px/ob_px_sub_coord.h"
 #include "lib/allocator/ob_safe_arena.h"
 #include "lib/trace/ob_trace.h"
-
+/** Note:这里是SQC管理Worker的Handler接口
+*/
 namespace oceanbase
 {
 
@@ -55,6 +56,10 @@ private:
   common::ObArray<int64_t> tid_array_;
 };
 
+/** Note:外部类
+ * 调用:
+ * 
+*/
 class ObPxSqcHandler
 {
 public:

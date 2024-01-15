@@ -63,6 +63,15 @@ namespace common {
 #define DELETE_STAT_HISTORY "DELETE FROM %s %s;"
 
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::gather_table_stats
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::set_table_stats
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::delete_table_stats
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::update_online_stat
+ * ob_dbms_stats_lock_unlock.cpp/ObDbmsStatsLockUnlock::get_stats_history_sql
+*/
 int ObDbmsStatsHistoryManager::get_history_stat_handles(ObExecContext &ctx,
                                                         const ObTableStatParam &param,
                                                         ObIArray<ObOptTableStatHandle> &history_tab_handles,
@@ -102,6 +111,11 @@ int ObDbmsStatsHistoryManager::get_history_stat_handles(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::purge_stats
+*/
 int ObDbmsStatsHistoryManager::purge_stats(ObExecContext &ctx, const int64_t specify_time)
 {
   int ret = OB_SUCCESS;
@@ -211,6 +225,11 @@ int ObDbmsStatsHistoryManager::purge_stats(ObExecContext &ctx, const int64_t spe
   return ret;
 }
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::alter_stats_history_retention
+*/
 int ObDbmsStatsHistoryManager::alter_stats_history_retention(ObExecContext &ctx,
                                                              const int64_t new_retention)
 {
@@ -242,6 +261,13 @@ int ObDbmsStatsHistoryManager::alter_stats_history_retention(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::restore_table_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::get_stats_history_availability
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::get_stats_history_retention
+*/
 int ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ObExecContext &ctx,
                                                                             bool fetch_history_retention,
                                                                             ObObj &result)
@@ -306,6 +332,12 @@ int ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ObEx
   return ret;
 }
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::restore_table_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::restore_schema_stats
+*/
 int ObDbmsStatsHistoryManager::restore_table_stats(ObExecContext &ctx,
                                                    const ObTableStatParam &param,
                                                    const int64_t specify_time)

@@ -131,6 +131,7 @@ int ObPxFifoCoordOp::fetch_rows(const int64_t row_cnt)
     ret = OB_ITER_END;
   } else if (OB_UNLIKELY(!first_row_fetched_)) {
     // 驱动初始 DFO 的分发
+    // Note:ob_px_scheduler.cpp接口
     if (OB_FAIL(msg_proc_.startup_msg_loop(ctx_))) {
       LOG_WARN("initial dfos NOT dispatched successfully", K(ret));
     }
@@ -191,6 +192,7 @@ int ObPxFifoCoordOp::fetch_rows(const int64_t row_cnt)
         op_monitor_info_.otherstat_2_value_ = oceanbase::common::ObClockGenerator::getClock();
       }
       if (coord_info_.all_threads_finish_) {
+        // Note:ob_px_scheduler.cpp接口
         (void) msg_proc_.on_process_end(ctx_);
         ret = OB_ITER_END;
         LOG_TRACE("all rows received, all sqcs reported, qc says: byebye!", K(ret));

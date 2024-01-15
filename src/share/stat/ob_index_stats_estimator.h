@@ -15,7 +15,8 @@
 
 #include "share/stat/ob_basic_stats_estimator.h"
 #include "share/stat/ob_stat_item.h"
-
+/** Note:统计信息索引状态
+*/
 namespace oceanbase
 {
 using namespace sql;

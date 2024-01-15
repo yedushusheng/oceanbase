@@ -76,9 +76,9 @@ int ObAnalyzeExecutor::execute(ObExecContext &ctx, ObAnalyzeStmt &stmt)
       ObOptStatRunningMonitor running_monitor(ctx.get_allocator(), start_time, param.allocator_->used(), gather_stat);
       if (OB_FAIL(running_monitor.add_table_info(param))) {
         LOG_WARN("failed to add table info", K(ret));
-      } else if (OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, param))) {
+      } else if (OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, param))) {// Note:
         LOG_WARN("failed check stat locked", K(ret));
-      } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, param))) {
+      } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, param))) {// Note:
         LOG_WARN("failed to gather table stats", K(ret));
       } else if (OB_FAIL(pl::ObDbmsStats::update_stat_cache(session->get_rpc_tenant_id(), param))) {
         LOG_WARN("failed to update stat cache", K(ret));
@@ -94,7 +94,7 @@ int ObAnalyzeExecutor::execute(ObExecContext &ctx, ObAnalyzeStmt &stmt)
       ObOptStatManager::get_instance().update_opt_stat_gather_stat(gather_stat);
     }
   } else {
-    if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, param, true))) {
+    if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, param, true))) {// Note:
       LOG_WARN("failed to drop table stats", K(ret));
     } else {
       LOG_TRACE("succeed to drop table stats", K(param));

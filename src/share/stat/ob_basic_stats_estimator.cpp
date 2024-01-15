@@ -130,6 +130,14 @@ int ObBasicStatsEstimator::estimate(const ObTableStatParam &param,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::gather_table_stats
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::gather_index_stats
+ * ob_index_stats_estimator.cpp/ObIndexStatsEstimator::fast_gather_index_stats
+*/
 int ObBasicStatsEstimator::estimate_block_count(ObExecContext &ctx,
                                                 const ObTableStatParam &param,
                                                 PartitionIdBlockMap &id_block_map)
@@ -213,6 +221,12 @@ int ObBasicStatsEstimator::estimate_block_count(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 估算修改的行数
+ * 调用:
+ * sql/optimizer/ObDynamicSampling::estimate_table_micro_block_count
+*/
 int ObBasicStatsEstimator::do_estimate_block_count(ObExecContext &ctx,
                                                    const uint64_t tenant_id,
                                                    const uint64_t table_id,
@@ -373,6 +387,14 @@ int ObBasicStatsEstimator::get_tablet_locations(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 估算修改的行数
+ * 调用:
+ * ObDbmsStats::get_common_table_stale_percent
+ * ObDbmsStats::get_user_partition_table_stale_percent
+ * sql/optimizer/ObDynamicSampling::get_table_dml_info
+*/
 int ObBasicStatsEstimator::estimate_modified_count(ObExecContext &ctx,
                                                    const uint64_t tenant_id,
                                                    const uint64_t table_id,
@@ -441,6 +463,13 @@ int ObBasicStatsEstimator::estimate_modified_count(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ObDbmsStats::get_common_table_stale_percent
+ * ObDbmsStats::get_user_partition_table_stale_percent
+*/
 int ObBasicStatsEstimator::estimate_row_count(ObExecContext &ctx,
                                               const uint64_t tenant_id,
                                               const uint64_t table_id,
@@ -503,6 +532,12 @@ int ObBasicStatsEstimator::estimate_row_count(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ObDbmsStats::get_need_statistics_tables
+*/
 int ObBasicStatsEstimator::get_gather_table_duration(ObExecContext &ctx,
                                                      const uint64_t tenant_id,
                                                      const uint64_t table_id,
@@ -565,6 +600,13 @@ int ObBasicStatsEstimator::get_gather_table_duration(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 估算修改的行数
+ * 调用:
+ * ObDbmsStats::get_user_partition_table_stale_percent
+ * ObDbmsStats::get_user_partition_table_stale_percent
+*/
 int ObBasicStatsEstimator::estimate_stale_partition(ObExecContext &ctx,
                                                     const uint64_t tenant_id,
                                                     const uint64_t table_id,
@@ -686,6 +728,14 @@ int ObBasicStatsEstimator::estimate_stale_partition(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::gather_table_stats
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::update_online_stat
+ * ob_incremental_stat_estimator.cpp/ObIncrementalStatEstimator::derive_global_stat_by_direct_load
+*/
 int ObBasicStatsEstimator::update_last_modified_count(ObExecContext &ctx,
                                                       const ObTableStatParam &param)
 {
@@ -722,6 +772,12 @@ int ObBasicStatsEstimator::update_last_modified_count(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ObDbmsStats::get_table_stale_percent
+*/
 int ObBasicStatsEstimator::check_table_statistics_state(ObExecContext &ctx,
                                                         const uint64_t tenant_id,
                                                         const uint64_t table_id,

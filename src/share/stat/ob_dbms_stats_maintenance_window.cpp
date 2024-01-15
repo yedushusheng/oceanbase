@@ -65,6 +65,12 @@ const char *windows_name[DAY_OF_WEEK] = {"MONDAY_WINDOW",
                                          "SUNDAY_WINDOW"};
 const char *opt_stats_history_manager = "OPT_STATS_HISTORY_MANAGER";
 
+/** Note:外部接口
+ * 功能:
+ * 获取租户的状态
+ * 调用:
+ * rootserver/ob_ddl_operator.cpp/ObDDLOperator::init_tenant_optimizer_stats_info
+*/
 int ObDbmsStatsMaintenanceWindow::get_stats_maintenance_window_jobs_sql(const ObSysVariableSchema &sys_variable,
                                                                         const uint64_t tenant_id,
                                                                         ObSqlString &raw_sql,
@@ -329,6 +335,12 @@ int ObDbmsStatsMaintenanceWindow::get_window_job_info(const int64_t current_time
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_scheduler_mysql.cpp/ObDBMSSchedulerMysql::set_attribute
+*/
 int ObDbmsStatsMaintenanceWindow::is_stats_maintenance_window_attr(const sql::ObSQLSessionInfo *session,
                                                                    const ObString &job_name,
                                                                    const ObString &attr_name,

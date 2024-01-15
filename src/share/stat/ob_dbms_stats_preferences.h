@@ -16,7 +16,10 @@
 #include "share/stat/ob_stat_define.h"
 #include "sql/engine/ob_exec_context.h"
 #include "share/stat/ob_stat_item.h"
-
+/** Note:收集策略配置项（Prefs）管理功能
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp
+*/
 namespace oceanbase {
 using namespace sql;
 namespace common {

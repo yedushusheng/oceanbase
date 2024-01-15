@@ -24,7 +24,12 @@
 #include "sql/dtl/ob_dtl_channel_loop.h"
 #include "sql/dtl/ob_dtl_flow_control.h"
 #include "sql/dtl/ob_dtl_linked_buffer.h"
-
+/** Note:并行查询Exchange具体实现
+ * 调用:
+ * ob_sqc_ctx.cpp
+ * 被调用:
+ * 
+*/
 namespace oceanbase
 {
 namespace sql

@@ -21,6 +21,15 @@
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/InstCombine/InstCombine.h"
 
+/** Note:编译执行比解释执行的优势毋庸赘言,OceanBase也是采用把存储过程编译为机器码的方式进行执行,
+ * 但是和Oracle实现不同的是,OceanBase采用JIT技术,无需依赖外部C编译器和生成动态链接库.
+ * 采用这一技术方案,有如下优点:
+ * 无需研究体系结构相关的复杂的机器码生成,就可以获得编译执行的效果;
+ * 生成LLVM IR比生成汇编简单很多,且自然拥有了考虑跨平台能力;
+ * LLVM提供的成熟的优化模块都是基于LLVM IR的,clang等项目中对优化器的改进都可以直接被我们受益;
+ * 用JIT技术在Observer内直接控制生成编译后的代码,比Oracle采用的在数据库外部编译器编译结合动态链接库装载的方式在可控性,性能,可维护性各方面都有优势;
+ * PL的编译执行可以和SQL表达式及部分physical operator甚至是整个查询计划采用编译执行相结合,获取整体性能的提升.
+*/
 namespace oceanbase
 {
 namespace jit

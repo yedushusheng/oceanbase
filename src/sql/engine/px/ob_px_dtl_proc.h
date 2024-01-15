@@ -21,7 +21,14 @@
 #include "sql/engine/px/ob_px_coord_msg_proc.h"
 #include "sql/dtl/ob_dtl_processor.h"
 
-
+/** Note:DTL操作接口
+ * Data Transfer Layer (DTL)
+ * 数据传输层,分布式并行执行框架中用于提供各执行线程之间数据传输的网络传输框架.
+ * 调用:
+ * ob_px_coor_msg_proc.cpp
+ * 被调用:
+ * ob_sqc_ctx.cpp
+*/
 namespace oceanbase
 {
 namespace sql

@@ -17,7 +17,13 @@
 #include "sql/engine/ob_exec_context.h"
 #include "share/stat/ob_stat_item.h"
 #include "share/stat/ob_opt_column_stat_cache.h"
-
+/** Note:统计信息增量收集
+ * 调用:
+ * observer/table_load/ob_table_load_coordinator.cpp
+ * ob_basic_stats_estimator.cpp
+ * ob_dbms_stats_executor.cpp
+ * ob_dbms_stats_lock_unlock.cpp
+*/
 namespace oceanbase {
 using namespace sql;
 namespace common {

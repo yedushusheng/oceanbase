@@ -14,7 +14,8 @@
 #define __SQL_ENGINE_PX_SUB_TRANS_UTIL_H__
 
 #include "sql/ob_sql_trans_control.h"
-
+/** Note:子事务的控制接口
+*/
 namespace oceanbase
 {
 namespace sql

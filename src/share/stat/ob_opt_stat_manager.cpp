@@ -237,6 +237,12 @@ int ObOptStatManager::get_table_stat(const uint64_t tenant_id,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_dbms_stat_executor.cpp/ObDbmsStatsExecutor::set_column_stats
+*/
 int ObOptStatManager::update_column_stat(share::schema::ObSchemaGetterGuard *schema_guard,
                                          const uint64_t tenant_id,
                                          ObMySQLTransaction &trans,
@@ -256,7 +262,7 @@ int ObOptStatManager::update_column_stat(share::schema::ObSchemaGetterGuard *sch
                                                                         current_time,
                                                                         only_update_col_stat,
                                                                         false,
-                                                                        print_params))) {
+                                                                        print_params))) {// Note:
     LOG_WARN("failed to update column stat.", K(ret));
   } else { /*do nothing*/ }
   return ret;
@@ -404,7 +410,7 @@ int ObOptStatManager::batch_write(share::schema::ObSchemaGetterGuard *schema_gua
                                                                         current_time,
                                                                         false,
                                                                         is_history_stat,
-                                                                        print_params))) {
+                                                                        print_params))) {// Note:
     LOG_WARN("failed to update coumn stats", K(ret));
   }
   return ret;

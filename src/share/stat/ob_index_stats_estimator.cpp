@@ -264,7 +264,7 @@ int ObIndexStatsEstimator::fast_gather_index_stats(ObExecContext &ctx,
                                                    ObModIds::OB_HASH_BUCKET_TABLE_STATISTICS,
                                                    index_param.tenant_id_))) {
     LOG_WARN("failed to create hash map", K(ret));
-  } else if (OB_FAIL(ObBasicStatsEstimator::estimate_block_count(ctx, index_param, partition_id_block_map))) {
+  } else if (OB_FAIL(ObBasicStatsEstimator::estimate_block_count(ctx, index_param, partition_id_block_map))) {// Note:
     LOG_WARN("failed to estimate block count", K(ret));
   } else {
     bool is_continued = true;

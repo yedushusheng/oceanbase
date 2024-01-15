@@ -24,7 +24,8 @@
 #include "share/stat/ob_basic_stats_estimator.h"
 #include "share/stat/ob_dbms_stats_executor.h"
 #include "share/stat/ob_stat_define.h"
-
+/** Note:优化器获取状态信息
+*/
 namespace oceanbase
 {
 namespace sql

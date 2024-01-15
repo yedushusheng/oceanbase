@@ -40,6 +40,8 @@ ObDfoSchedulerBasic::ObDfoSchedulerBasic(ObPxCoordInfo &coord_info,
 {
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedulerBasic::dispatch_root_dfo_channel_info(ObExecContext &ctx, ObDfo &child, ObDfo &parent) const
 {
   int ret = OB_SUCCESS;
@@ -49,7 +51,7 @@ int ObDfoSchedulerBasic::dispatch_root_dfo_channel_info(ObExecContext &ctx, ObDf
     ObDtlChTotalInfo *ch_info = nullptr;
     if (OB_FAIL(child.get_dfo_ch_info(0, ch_info))) {
       LOG_WARN("failed to get task receive chs", K(ret));
-    } else if (!parent.check_root_valid()) {
+    } else if (!parent.check_root_valid()) {  // Note:
       ret = OB_ERR_UNEXPECTED;
       LOG_WARN("NULL ptr", K(parent), K(ret));
     } else if (OB_FAIL(root_dfo_action_.receive_channel_root_dfo(ctx, parent, *ch_info))) {
@@ -59,6 +61,10 @@ int ObDfoSchedulerBasic::dispatch_root_dfo_channel_info(ObExecContext &ctx, ObDf
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::startup_msg_loop
+*/
 int ObDfoSchedulerBasic::init_all_dfo_channel(ObExecContext &ctx) const
 {
   int ret = OB_SUCCESS;
@@ -67,6 +73,10 @@ int ObDfoSchedulerBasic::init_all_dfo_channel(ObExecContext &ctx) const
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::startup_msg_loop
+*/
 int ObDfoSchedulerBasic::prepare_schedule_info(ObExecContext &exec_ctx)
 {
   int ret = OB_SUCCESS;
@@ -98,6 +108,10 @@ int ObDfoSchedulerBasic::prepare_schedule_info(ObExecContext &exec_ctx)
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_sqc_init_msg
+*/
 int ObDfoSchedulerBasic::on_sqc_threads_inited(ObExecContext &ctx, ObDfo &dfo) const
 {
   int ret = OB_SUCCESS;
@@ -110,6 +124,8 @@ int ObDfoSchedulerBasic::on_sqc_threads_inited(ObExecContext &ctx, ObDfo &dfo) c
 }
 
 // 构建m * n的网络shuffle
+/** Note:内部函数
+*/
 int ObDfoSchedulerBasic::build_data_mn_xchg_ch(ObExecContext &ctx, ObDfo &child, ObDfo &parent) const
 {
   int ret = OB_SUCCESS;
@@ -144,6 +160,10 @@ int ObDfoSchedulerBasic::build_data_mn_xchg_ch(ObExecContext &ctx, ObDfo &child,
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_dfo_pair_thread_inited
+*/
 int ObDfoSchedulerBasic::build_data_xchg_ch(ObExecContext &ctx, ObDfo &child, ObDfo &parent) const
 {
   int ret = OB_SUCCESS;
@@ -151,6 +171,8 @@ int ObDfoSchedulerBasic::build_data_xchg_ch(ObExecContext &ctx, ObDfo &child, Ob
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedulerBasic::dispatch_receive_channel_info_via_sqc(ObExecContext &ctx,
                                                                        ObDfo &child,
                                                                        ObDfo &parent,
@@ -198,6 +220,8 @@ int ObDfoSchedulerBasic::dispatch_receive_channel_info_via_sqc(ObExecContext &ct
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedulerBasic::set_temp_table_ctx_for_sqc(ObExecContext &ctx,
                                                     ObDfo &child) const
 {
@@ -219,6 +243,8 @@ int ObDfoSchedulerBasic::set_temp_table_ctx_for_sqc(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+*/
 int ObDfoSchedulerBasic::get_tenant_id(ObExecContext &ctx, uint64_t &tenant_id) const
 {
   int ret = OB_SUCCESS;
@@ -232,6 +258,8 @@ int ObDfoSchedulerBasic::get_tenant_id(ObExecContext &ctx, uint64_t &tenant_id) 
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedulerBasic::dispatch_transmit_channel_info_via_sqc(ObExecContext &ctx,
                                                                         ObDfo &child,
                                                                         ObDfo &parent) const
@@ -269,6 +297,10 @@ int ObDfoSchedulerBasic::dispatch_transmit_channel_info_via_sqc(ObExecContext &c
 }
 
 // -------------分割线-----------
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::startup_msg_loop
+*/
 int ObSerialDfoScheduler::init_all_dfo_channel(ObExecContext &ctx) const
 {
   int ret = OB_SUCCESS;
@@ -381,6 +413,10 @@ int ObSerialDfoScheduler::init_dfo_channel(ObExecContext &ctx, ObDfo *child, ObD
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_dfo_pair_thread_inited
+*/
 int ObSerialDfoScheduler::dispatch_dtl_data_channel_info(ObExecContext &ctx, ObDfo &child, ObDfo &parent) const
 {
   int ret = OB_SUCCESS;
@@ -393,11 +429,17 @@ int ObSerialDfoScheduler::dispatch_dtl_data_channel_info(ObExecContext &ctx, ObD
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::startup_msg_loop
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_sqc_finish_msg
+*/
 int ObSerialDfoScheduler::try_schedule_next_dfo(ObExecContext &ctx) const
 {
   int ret = OB_SUCCESS;
   FLTSpanGuard(px_schedule);
   ObDfo *dfo = NULL;
+  // Note:ob_dfo_mgr.cc接口
   if (OB_FAIL(coord_info_.dfo_mgr_.get_ready_dfo(dfo))) {
     if (OB_ITER_END != ret) {
       LOG_WARN("fail get ready dfos", K(ret));
@@ -595,7 +637,10 @@ int ObSerialDfoScheduler::do_schedule_dfo(ObExecContext &ctx, ObDfo &dfo) const
   return ret;
 }
 
-
+/** Note:外部接口
+ * 调用:
+ * 
+*/
 void ObSerialDfoScheduler::clean_dtl_interm_result(ObExecContext &exec_ctx)
 {
   int ret = OB_SUCCESS;
@@ -767,6 +812,10 @@ int ObParallelDfoScheduler::do_schedule_dfo(ObExecContext &exec_ctx, ObDfo &dfo)
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_dfo_pair_thread_inited
+*/
 int ObParallelDfoScheduler::dispatch_dtl_data_channel_info(ObExecContext &ctx, ObDfo &child, ObDfo &parent) const
 {
   int ret = OB_SUCCESS;
@@ -1032,7 +1081,8 @@ int ObParallelDfoScheduler::mock_on_sqc_init_msg(ObExecContext &ctx, ObDfo &dfo)
   return ret;
 }
 
-
+/** Note:内部函数
+*/
 int ObParallelDfoScheduler::schedule_dfo(ObExecContext &exec_ctx,
     ObDfo &dfo) const
 {
@@ -1149,6 +1199,7 @@ int ObParallelDfoScheduler::dispatch_sqc(ObExecContext &exec_ctx,
   // 分发 sqc 可能需要重试，
   // 分发 sqc 的 rpc 成功，但 sqc 上无法分配最小个数的 worker 线程，`dispatch_sqc`内部进行重试，
   // 如果多次重试（达到超时时间）都无法成功，不需要再重试整个DFO（因为已经超时）
+  // Note:
   ObPxSqcAsyncProxy proxy(coord_info_.rpc_proxy_, dfo, exec_ctx, phy_plan_ctx, session, phy_plan, sqcs);
   auto process_failed_proxy = [&]() {
     if (is_data_not_readable_err(ret) || is_server_down_error(ret)) {
@@ -1302,6 +1353,11 @@ int ObParallelDfoScheduler::do_cleanup_dfo(ObDfo &dfo) const
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObPxMsgProc::startup_msg_loop
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_sqc_finish_msg
+*/
 int ObParallelDfoScheduler::try_schedule_next_dfo(ObExecContext &ctx) const
 {
   int ret = OB_SUCCESS;
@@ -1309,6 +1365,7 @@ int ObParallelDfoScheduler::try_schedule_next_dfo(ObExecContext &ctx) const
   ObSEArray<ObDfo *, 3> dfos;
   while (OB_SUCC(ret)) {
     // 每次只迭代出一对 DFO，parent & child
+    // Note:ob_dfo_mgr.cpp
     if (OB_FAIL(coord_info_.dfo_mgr_.get_ready_dfos(dfos))) {
       if (OB_ITER_END != ret) {
         LOG_WARN("fail get ready dfos", K(ret));

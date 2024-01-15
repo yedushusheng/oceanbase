@@ -18,6 +18,10 @@
 #include "share/stat/ob_stat_define.h"
 #include "share/stat/ob_opt_stat_gather_stat.h"
 #include "lib/mysqlclient/ob_mysql_transaction.h"
+/** Note:状态信息相关SQL服务
+ * 调用:
+ * ob_opt_stat_manager.cpp
+*/
 namespace oceanbase {
 namespace common {
 namespace sqlclient

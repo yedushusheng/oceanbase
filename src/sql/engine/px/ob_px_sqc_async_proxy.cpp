@@ -54,6 +54,10 @@ ObSqcAsyncCB::clone(const rpc::frame::SPAlloc &alloc) const {
 }
 
 /* ObPxSqcAsyncProxy */
+/** Note:外部接口
+ * 调用:
+ * ob_dfo_scheduler.cpp/ObParallelDfoScheduler::dispatch_sqc
+*/
 int ObPxSqcAsyncProxy::launch_all_rpc_request() {
   int ret = OB_SUCCESS;
   // prepare allocate the results_ array

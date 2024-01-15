@@ -18,7 +18,14 @@
 #include "share/config/ob_server_config.h"
 #include "observer/ob_server_struct.h"
 #include "sql/engine/px/ob_px_target_monitor_rpc.h"
-
+/** Note:RPC通信的代理
+ * 主要是在子类ob_px_sqc_async_proxy.h/ObSqcAsyncCB里实现
+ * 负责SQC子计划异步RPC回调通信
+ * 调用:
+ * ob_px_sqc_async_proxy.h
+ * 被调用:
+ * 
+*/
 namespace oceanbase {
 
 namespace obrpc {

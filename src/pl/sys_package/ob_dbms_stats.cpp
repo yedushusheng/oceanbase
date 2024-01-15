@@ -104,14 +104,14 @@ int ObDbmsStats::gather_table_stats(ObExecContext &ctx, ParamStore &params, ObOb
     } else if (OB_FAIL(running_monitor.add_table_info(stat_param))) {
       LOG_WARN("failed to add table info", K(ret));
     } else if (stat_param.force_ &&
-              OB_FAIL(ObDbmsStatsLockUnlock::fill_stat_locked(ctx, stat_param))) {
+              OB_FAIL(ObDbmsStatsLockUnlock::fill_stat_locked(ctx, stat_param))) {// Note:
       LOG_WARN("failed fill stat locked", K(ret));
     } else if (!stat_param.force_ &&
               OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, stat_param))) {
       LOG_WARN("failed check stat locked", K(ret));
     } else if (OB_FAIL(ObOptStatMonitorManager::flush_database_monitoring_info(ctx, false, true))) {
       LOG_WARN("failed to do flush database monitoring info", K(ret));
-    } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, stat_param))) {
+    } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, stat_param))) {// Note:
       LOG_WARN("failed to gather table stats", K(ret));
     } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(),
                                          stat_param,
@@ -226,7 +226,7 @@ int ObDbmsStats::gather_schema_stats(ObExecContext &ctx, ParamStore &params, ObO
         }
       } else if (share::schema::ObTableType::EXTERNAL_TABLE == stat_param.ref_table_type_) {
         // not allow gather external table in schema scope
-      } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, stat_param))) {
+      } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, stat_param))) {// Note:
         LOG_WARN("failed to gather table stats", K(ret));
       } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(),
                                             stat_param,
@@ -327,7 +327,7 @@ int ObDbmsStats::gather_index_stats(ObExecContext &ctx, ParamStore &params, ObOb
   } else if (!ind_stat_param.force_ &&
              OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, ind_stat_param))) {
     LOG_WARN("failed check stat locked", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsExecutor::gather_index_stats(ctx, ind_stat_param))) {
+  } else if (OB_FAIL(ObDbmsStatsExecutor::gather_index_stats(ctx, ind_stat_param))) {// Note:
     LOG_WARN("failed to gather table stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), ind_stat_param))) {
     LOG_WARN("failed to update stat cache", K(ret));
@@ -380,7 +380,7 @@ int ObDbmsStats::gather_table_index_stats(ObExecContext &ctx,
                                                                    data_param.duration_time_,
                                                                    index_param.duration_time_))) {
         LOG_WARN("failed to get valid duration time", K(ret));
-      } else if (OB_FAIL(ObDbmsStatsExecutor::gather_index_stats(ctx, index_param))) {
+      } else if (OB_FAIL(ObDbmsStatsExecutor::gather_index_stats(ctx, index_param))) {// Note:
         LOG_WARN("failed to gather table stats", K(ret));
       } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), index_param))) {
         LOG_WARN("failed to update stat cache", K(ret));
@@ -528,7 +528,7 @@ int ObDbmsStats::set_table_stats(ObExecContext &ctx, ParamStore &params, ObObj &
   } else if (!param.table_param_.force_ &&
              OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, param.table_param_))) {
     LOG_WARN("failed check stat locked", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsExecutor::set_table_stats(ctx, param))) {
+  } else if (OB_FAIL(ObDbmsStatsExecutor::set_table_stats(ctx, param))) {// Note:
     LOG_WARN("failed to set table stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), param.table_param_))) {
     LOG_WARN("failed to update stat cache", K(ret));
@@ -568,6 +568,12 @@ int ObDbmsStats::set_table_stats(ObExecContext &ctx, ParamStore &params, ObObj &
  * @param result
  * @return
  */
+/** Note:外部接口
+ * 功能:
+ * 设置column的状态(这里是PL存储过程调用)
+ * 调用:
+ * ob_pl_interface_pragma.h
+*/
 int ObDbmsStats::set_column_stats(sql::ObExecContext &ctx,
                                   sql::ParamStore &params,
                                   common::ObObj &result)
@@ -618,7 +624,7 @@ int ObDbmsStats::set_column_stats(sql::ObExecContext &ctx,
   } else if (!param.table_param_.force_ &&
              OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, param.table_param_))) {
     LOG_WARN("failed check stat locked", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsExecutor::set_column_stats(ctx, param))) {
+  } else if (OB_FAIL(ObDbmsStatsExecutor::set_column_stats(ctx, param))) {// Note:
     LOG_WARN("failed to set column stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), param.table_param_))) {
     LOG_WARN("failed to update stat cache", K(ret));
@@ -717,7 +723,7 @@ int ObDbmsStats::set_index_stats(ObExecContext &ctx, ParamStore &params, ObObj &
   } else if (!set_index_param.table_param_.force_ &&
              OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, set_index_param.table_param_))) {
     LOG_WARN("failed check stat locked", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsExecutor::set_table_stats(ctx, set_index_param))) {
+  } else if (OB_FAIL(ObDbmsStatsExecutor::set_table_stats(ctx, set_index_param))) {// Note:
     LOG_WARN("failed to set table stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(),
                                        set_index_param.table_param_))) {
@@ -791,7 +797,7 @@ int ObDbmsStats::delete_table_stats(ObExecContext &ctx, ParamStore &params, ObOb
       LOG_WARN("failed check stat locked", K(ret));
     } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx,
                                                                stat_param,
-                                                               cascade_columns))) {
+                                                               cascade_columns))) {// Note:
       LOG_WARN("failed to delete table stats", K(ret));
     } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
       LOG_WARN("failed to update stat cache", K(ret));
@@ -936,7 +942,7 @@ int ObDbmsStats::delete_schema_stats(ObExecContext &ctx, ParamStore &params, ObO
             } else {
               LOG_WARN("failed to check stat locked", K(ret));
             }
-          } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, stat_param, true))) {
+          } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, stat_param, true))) {// Note:
             LOG_WARN("failed to delete table stats", K(ret));
           } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
             LOG_WARN("failed to update stat cache", K(ret));
@@ -1014,7 +1020,7 @@ int ObDbmsStats::delete_index_stats(ObExecContext &ctx, ParamStore &params, ObOb
     } else if (!index_stat_param.force_ &&
                OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, index_stat_param))) {
       LOG_WARN("failed check stat locked", K(ret));
-    } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, index_stat_param, false))) {
+    } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, index_stat_param, false))) {// Note:
       LOG_WARN("failed to delete table stats", K(ret));
     } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), index_stat_param))) {
       LOG_WARN("failed to update stat cache", K(ret));
@@ -1049,7 +1055,7 @@ int ObDbmsStats::delete_table_index_stats(sql::ObExecContext &ctx,
         } else if (!index_param.force_ &&
                    OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, index_param))) {
           LOG_WARN("failed check stat locked", K(ret));
-        } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, index_param, false))) {
+        } else if (OB_FAIL(ObDbmsStatsExecutor::delete_table_stats(ctx, index_param, false))) {// Note:
           LOG_WARN("failed to delete table stats", K(ret));
         } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), index_param))) {
           LOG_WARN("failed to update stat cache", K(ret));
@@ -1124,7 +1130,7 @@ int ObDbmsStats::create_stat_table(ObExecContext &ctx, ParamStore &params, ObObj
       param.db_name_ = session->get_user_name();
     }
     if (OB_SUCC(ret)) {
-      if (OB_FAIL(ObDbmsStatsExportImport::create_stat_table(ctx, param))) {
+      if (OB_FAIL(ObDbmsStatsExportImport::create_stat_table(ctx, param))) {// Note:
         LOG_WARN("failed to create table stats", K(ret));
       } else {
         LOG_TRACE("succeed to create table stat", K(param));
@@ -1179,7 +1185,7 @@ int ObDbmsStats::drop_stat_table(ObExecContext &ctx, ParamStore &params, ObObj &
       param.db_name_ = session->get_user_name();
     }
     if (OB_SUCC(ret)) {
-      if (OB_FAIL(ObDbmsStatsExportImport::drop_stat_table(ctx, param))) {
+      if (OB_FAIL(ObDbmsStatsExportImport::drop_stat_table(ctx, param))) {// Note:
         LOG_WARN("failed to drop table stats", K(ret));
       } else {
         LOG_TRACE("succeed to drop table stat", K(param));
@@ -1254,7 +1260,7 @@ int ObDbmsStats::export_table_stats(ObExecContext &ctx, ParamStore &params, ObOb
       stat_param.stat_tab_ = stat_table_param.tab_name_;
     }
     if (OB_FAIL(ret)) {
-    } else if (OB_FAIL(ObDbmsStatsExportImport::export_table_stats(ctx, stat_param, empty_string))) {
+    } else if (OB_FAIL(ObDbmsStatsExportImport::export_table_stats(ctx, stat_param, empty_string))) {// Note:
       LOG_WARN("failed to export table stats", K(ret));
     } else if (stat_param.cascade_ && stat_param.part_name_.empty() &&
               OB_FAIL(export_table_index_stats(ctx, stat_param))) {
@@ -1322,7 +1328,7 @@ int ObDbmsStats::export_column_stats(sql::ObExecContext &ctx,
     stat_param.stat_tab_ = stat_table_param.tab_name_;
   }
   if (OB_FAIL(ret)) {
-  } else if (OB_FAIL(ObDbmsStatsExportImport::export_column_stats(ctx, stat_param))) {
+  } else if (OB_FAIL(ObDbmsStatsExportImport::export_column_stats(ctx, stat_param))) {// Note:
     LOG_WARN("failed to export column stats", K(ret));
   } else {
     LOG_TRACE("succeed to export column stats", K(stat_param));
@@ -1386,7 +1392,7 @@ int ObDbmsStats::export_schema_stats(ObExecContext &ctx, ParamStore &params, ObO
           stat_param.allocator_ = &tmp_alloc;//use the temp allocator to free memory after export stats.
           if (OB_FAIL(parse_table_part_info(ctx, stat_table, stat_param))) {
             LOG_WARN("failed to parse table part info", K(ret));
-          } else if (OB_FAIL(ObDbmsStatsExportImport::export_table_stats(ctx, stat_param, tmp_str))) {
+          } else if (OB_FAIL(ObDbmsStatsExportImport::export_table_stats(ctx, stat_param, tmp_str))) {// Note:
             LOG_WARN("failed to export table stats", K(ret));
           } else if (OB_FAIL(export_table_index_stats(ctx, stat_param))) {
             LOG_WARN("failed to export table index stats", K(ret));
@@ -1463,7 +1469,7 @@ int ObDbmsStats::export_index_stats(ObExecContext &ctx, ParamStore &params, ObOb
   }
   if (OB_FAIL(ret)) {
   } else if (OB_FAIL(ObDbmsStatsExportImport::export_table_stats(ctx, index_stat_param,
-                                                                 index_stat_param.data_table_name_))) {
+                                                                 index_stat_param.data_table_name_))) {// Note:
     LOG_WARN("failed to export table stats", K(ret));
   } else {
     LOG_TRACE("succeed to export table stats", K(index_stat_param));
@@ -1493,7 +1499,7 @@ int ObDbmsStats::export_table_index_stats(sql::ObExecContext &ctx,
         index_param.is_index_stat_ = true;
         if (OB_FAIL(ObDbmsStatsExportImport::export_table_stats(ctx,
                                                                 index_param,
-                                                                data_param.tab_name_))) {
+                                                                data_param.tab_name_))) {// Note:
           LOG_WARN("failed to export table stats", K(ret));
         } else {/*do nothing*/}
       }
@@ -1584,7 +1590,7 @@ int ObDbmsStats::import_table_stats(ObExecContext &ctx, ParamStore &params, ObOb
     } else if (!stat_param.force_ &&
               OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, stat_param))) {
       LOG_WARN("failed check stat locked", K(ret));
-    } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, stat_param))) {
+    } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, stat_param))) {// Note:
       LOG_WARN("failed to import table stats", K(ret));
     } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
       LOG_WARN("failed to update stat cache", K(ret));
@@ -1664,7 +1670,7 @@ int ObDbmsStats::import_column_stats(sql::ObExecContext &ctx,
   } else if (!stat_param.force_ &&
              OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, stat_param))) {
     LOG_WARN("failed check stat locked", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsExportImport::import_column_stats(ctx, stat_param))) {
+  } else if (OB_FAIL(ObDbmsStatsExportImport::import_column_stats(ctx, stat_param))) {// Note:
     LOG_WARN("failed to import column stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
     LOG_WARN("failed to update stat cache", K(ret));
@@ -1750,7 +1756,7 @@ int ObDbmsStats::import_schema_stats(ObExecContext &ctx, ParamStore &params, ObO
             } else {
               LOG_WARN("failed to check stat locked", K(ret));
             }
-          } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, stat_param))) {
+          } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, stat_param))) {// Note:
             LOG_WARN("failed to import table stats", K(ret));
           } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
             LOG_WARN("failed to update stat cache", K(ret));
@@ -1841,7 +1847,7 @@ int ObDbmsStats::import_index_stats(ObExecContext &ctx, ParamStore &params, ObOb
   } else if (!index_stat_param.force_ &&
              OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, index_stat_param))) {
     LOG_WARN("failed check stat locked", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, index_stat_param))) {
+  } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, index_stat_param))) {// Note:
     LOG_WARN("failed to import table stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), index_stat_param))) {
     LOG_WARN("failed to update stat cache", K(ret));
@@ -1878,7 +1884,7 @@ int ObDbmsStats::import_table_index_stats(sql::ObExecContext &ctx,
         } else if (!index_param.force_ &&
                    OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, index_param))) {
           LOG_WARN("failed check stat locked", K(ret));
-        } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, index_param))) {
+        } else if (OB_FAIL(ObDbmsStatsExportImport::import_table_stats(ctx, index_param))) {// Note:
           LOG_WARN("failed to import table stats", K(ret));
         } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), index_param))) {
           LOG_WARN("failed to update stat cache", K(ret));
@@ -1932,7 +1938,7 @@ int ObDbmsStats::lock_table_stats(sql::ObExecContext &ctx,
     stat_param.global_stat_param_.need_modify_ = true;
     stat_param.part_stat_param_.need_modify_ = true;
     stat_param.subpart_stat_param_.need_modify_ = true;
-    if (OB_FAIL(ObDbmsStatsLockUnlock::set_table_stats_lock(ctx, stat_param, true))) {
+    if (OB_FAIL(ObDbmsStatsLockUnlock::set_table_stats_lock(ctx, stat_param, true))) {// Note:
       LOG_WARN("failed to lock table stats", K(ret));
     } else if (OB_FAIL(lock_or_unlock_index_stats(ctx, stat_param, true))) {
       LOG_WARN("failed to lock index stats", K(ret));
@@ -2303,7 +2309,7 @@ int ObDbmsStats::restore_table_stats(sql::ObExecContext &ctx,
     ObObj tmp_timestamp;
     const int64_t current_time = ObTimeUtility::current_time();
     int64_t min_savetime = 0;
-    if (OB_FAIL(ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ctx, false, tmp_timestamp))) {
+    if (OB_FAIL(ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ctx, false, tmp_timestamp))) {// Note:
       LOG_WARN("failed to get min save time", K(ret));
     } else if (tmp_timestamp.is_null()) {
       //do nothing
@@ -2337,7 +2343,7 @@ int ObDbmsStats::restore_table_stats(sql::ObExecContext &ctx,
     LOG_WARN("failed check stat locked", K(ret));
   } else if (OB_FAIL(ObDbmsStatsHistoryManager::restore_table_stats(ctx,
                                                                     stat_param,
-                                                                    specify_time))) {
+                                                                    specify_time))) {// Note:
     LOG_WARN("failed restore table stats", K(ret));
   } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
     LOG_WARN("failed to update stat cache", K(ret));
@@ -2417,7 +2423,7 @@ int ObDbmsStats::restore_schema_stats(sql::ObExecContext &ctx,
         }
       } else if (OB_FAIL(ObDbmsStatsHistoryManager::restore_table_stats(ctx,
                                                                         stat_param,
-                                                                        specify_time))) {
+                                                                        specify_time))) {// Note:
         LOG_WARN("failed restore table stats", K(ret));
       } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), stat_param))) {
         LOG_WARN("failed to update stat cache", K(ret));
@@ -2470,7 +2476,7 @@ int ObDbmsStats::purge_stats(sql::ObExecContext &ctx,
     }
   }
   if (OB_SUCC(ret)) {
-    if (ObDbmsStatsHistoryManager::purge_stats(ctx, specify_time)) {
+    if (ObDbmsStatsHistoryManager::purge_stats(ctx, specify_time)) {// Note:
       LOG_WARN("failed to purge stats", K(ret));
     } else {/*do nothing*/}
   }
@@ -2518,7 +2524,7 @@ int ObDbmsStats::alter_stats_history_retention(sql::ObExecContext &ctx,
     LOG_WARN("Invalid or inconsistent input values", K(ret));
     LOG_USER_ERROR(OB_ERR_DBMS_STATS_PL, "Invalid or inconsistent input values");
   } else if (OB_FAIL(ObDbmsStatsHistoryManager::alter_stats_history_retention(ctx,
-                                                                              new_retention))) {
+                                                                              new_retention))) {// Note:
     LOG_WARN("failed to alter_stats_history_retention", K(ret), K(new_retention));
   } else {/*do nothing*/}
   return ret;
@@ -2544,7 +2550,7 @@ int ObDbmsStats::get_stats_history_availability(sql::ObExecContext &ctx,
     LOG_WARN("get unexpected null", K(ret), K(ctx.get_my_session()));
   } else if (OB_FAIL(check_statistic_table_writeable(ctx))) {
     LOG_WARN("failed to check tenant is restore", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ctx, false, result))) {
+  } else if (OB_FAIL(ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ctx, false, result))) {// Note:
     LOG_WARN("failed to get stats history availability", K(ret));
   } else if (result.is_null()) {
     //do nothing
@@ -2590,7 +2596,7 @@ int ObDbmsStats::get_stats_history_retention(sql::ObExecContext &ctx,
   int64_t retention_val = 0;
   if (OB_FAIL(check_statistic_table_writeable(ctx))) {
     LOG_WARN("failed to check tenant is restore", K(ret));
-  } else if (OB_FAIL(ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ctx, true, retention))) {
+  } else if (OB_FAIL(ObDbmsStatsHistoryManager::get_stats_history_retention_and_availability(ctx, true, retention))) {// Note:
     LOG_WARN("failed to get stats history retention", K(ret));
   } else if (OB_FAIL(retention.get_number(num_retention))) {
     LOG_WARN("failed to get int", K(ret), K(retention));
@@ -5260,7 +5266,7 @@ int ObDbmsStats::get_need_statistics_tables(sql::ObExecContext &ctx, ObGatherTab
             } else if (OB_FAIL(ObBasicStatsEstimator::get_gather_table_duration(ctx,
                                                                                 tenant_id,
                                                                                 table_schema->get_table_id(),
-                                                                                wrapper.last_gather_duration_))) {
+                                                                                wrapper.last_gather_duration_))) {// Note:
               LOG_WARN("failed to get gather table duration");
             } else if (stat_table.stale_percent_ < 0) {
               wrapper.stat_type_ = ObStatType::ObFirstTimeToGather;
@@ -5310,7 +5316,7 @@ int ObDbmsStats::get_table_stale_percent(sql::ObExecContext &ctx,
                                                                   table_id,
                                                                   part_id,
                                                                   is_locked,
-                                                                  partition_stat_infos))) {
+                                                                  partition_stat_infos))) {// Note:
     LOG_WARN("failed to check table has any statistics", K(ret));
   } else if (is_locked) {
     //if table is locked, don't gather stats.
@@ -5362,7 +5368,7 @@ int ObDbmsStats::get_common_table_stale_percent(sql::ObExecContext &ctx,
     if (OB_FAIL(ObBasicStatsEstimator::estimate_row_count(ctx,
                                                           tenant_id,
                                                           table_id,
-                                                          row_cnt))) {
+                                                          row_cnt))) {// Note:
       LOG_WARN("failed to estimate row count");
     } else {
       // currently we only regard tables whose rows >= 1000w as big table
@@ -5437,7 +5443,7 @@ int ObDbmsStats::get_user_partition_table_stale_percent(
     if (OB_FAIL(ObBasicStatsEstimator::estimate_row_count(ctx,
                                                           tenant_id,
                                                           table_id,
-                                                          row_cnt))) {
+                                                          row_cnt))) {// Note:
       LOG_WARN("failed to estimate row count");
     } else {
       is_big_table = row_cnt >= OPT_STATS_BIG_TABLE_ROWS;
@@ -5470,7 +5476,7 @@ int ObDbmsStats::get_user_partition_table_stale_percent(
   } else if (OB_FAIL(ObBasicStatsEstimator::estimate_modified_count(ctx,
                                                                     tenant_id,
                                                                     table_id,
-                                                                    inc_modified_count))) {
+                                                                    inc_modified_count))) {// Note:
     LOG_WARN("failed to estimate modified count", K(ret));
   } else if (inc_modified_count < 0) {
     // if some server reboot, increment modified count may less than 0. In this scenario,
@@ -5510,7 +5516,7 @@ int ObDbmsStats::get_user_partition_table_stale_percent(
                                                                        stale_percent_threshold,
                                                                        partition_stat_infos,
                                                                        no_regather_partition_ids,
-                                                                       no_regather_first_part_cnt))) {
+                                                                       no_regather_first_part_cnt))) {// Note:
       LOG_WARN("failed to estimate stale partition", K(ret));
     } else {
       int64_t total_part_cnt = table_schema.get_all_part_num();
@@ -5607,9 +5613,9 @@ int ObDbmsStats::gather_table_stats_with_default_param(ObExecContext &ctx,
     if (OB_FAIL(running_monitor.add_table_info(stat_param, stat_table.stale_percent_))) {
       LOG_WARN("failed to add table info", K(ret));
     } else if (OB_FAIL(ObDbmsStatsLockUnlock::adjust_table_stat_param(stat_table.no_regather_partition_ids_,
-                                                                      stat_param))) {
+                                                                      stat_param))) {// Note:
       LOG_WARN("failed to adjust table stat param", K(ret));
-    } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, stat_param))) {
+    } else if (OB_FAIL(ObDbmsStatsExecutor::gather_table_stats(ctx, stat_param))) {// Note:
       LOG_WARN("failed to gather table stats", K(ret));
     } else if (OB_FAIL(update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(),
                                          stat_param,

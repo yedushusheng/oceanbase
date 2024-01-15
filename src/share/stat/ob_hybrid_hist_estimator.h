@@ -17,6 +17,11 @@
 #include "share/stat/ob_opt_column_stat.h"
 #include "share/stat/ob_opt_table_stat.h"
 #include "sql/engine/aggregate/ob_aggregate_processor.h"
+/** Note:混合直方图的代价评估
+ * 调用:
+ * ob_dbms_stats_executor.cpp
+ * ob_incremental_stat_estimator.cpp
+*/
 namespace oceanbase
 {
 namespace common

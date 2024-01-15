@@ -21,7 +21,11 @@ using namespace common;
 using namespace sql;
 
 #define LOG_HASH_COUNT 2
-
+/** Note:外部接口
+ * 功能:向量化优化
+ * 调用:
+ * sql/engine/px/ob_px_bloom_filter.cpp/ObPxBloomFilter::init
+*/
 int ObPxBloomFilter::might_contain_simd(uint64_t hash, bool &is_match)
 {
   int ret = OB_SUCCESS;

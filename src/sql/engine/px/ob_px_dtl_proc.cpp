@@ -41,8 +41,13 @@ int ObPxReceiveDataChannelMsgP::process(const ObPxReceiveDataChannelMsg &pkt)
   return msg_proc_.on_receive_data_ch_msg(pkt);
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_sqc_ctx.cpp/
+*/
 int ObPxTransmitDataChannelMsgP::process(const ObPxTransmitDataChannelMsg &pkt)
 {
+  // Note:ob_px_coor_msg_proc.cpp接口
   return msg_proc_.on_transmit_data_ch_msg(pkt);
 }
 

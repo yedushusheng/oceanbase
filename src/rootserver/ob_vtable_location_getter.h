@@ -19,7 +19,8 @@
 #include "share/partition_table/ob_partition_location.h"
 #include "share/inner_table/ob_inner_table_schema.h"
 #include "share/location_cache/ob_vtable_location_service.h" // share::ObVtableLocationType
-
+/** Note:RootSerivce数据分布位置信息
+*/
 namespace oceanbase
 {
 namespace rootserver

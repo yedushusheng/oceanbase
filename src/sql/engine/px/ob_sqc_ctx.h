@@ -31,7 +31,16 @@
 #include "sql/engine/px/datahub/components/ob_dh_second_stage_reporting_wf.h"
 #include "sql/dtl/ob_dtl_msg_type.h"
 #include "sql/engine/px/datahub/components/ob_dh_opt_stats_gather.h"
-
+/** Note:SQC状态接口(管理DFO的接口封装)
+ * ObPxCoord会分析每个DFO位于哪些机器上以及每个机器上应该分配多少个线程执行它们,然后将它们发送到对应机器上执行.
+ * 为了减少RPC的次数,每台机器上无论启动多少个线程,都只发送一个RPC,RPC的processor我们称之为SQC(Sub Query Coordinator).[这个属于管理DFO]
+ * 它会负责将DFO提交到多个线程上并行执行.
+ * 调用:
+ * ob_px_dtl_proc.cpp
+ * 被调用:
+ * ob_px_coord_msg_proc.cpp
+ * ob_window_function_op.cpp
+*/
 namespace oceanbase
 {
 namespace sql

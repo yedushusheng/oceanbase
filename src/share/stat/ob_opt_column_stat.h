@@ -18,7 +18,8 @@
 #include "lib/allocator/ob_malloc.h"
 #include "lib/hash_func/murmur_hash.h"
 #include "share/cache/ob_kvcache_struct.h"
-
+/** Note:列级统计信息
+*/
 namespace oceanbase {
 namespace common {
 

@@ -18,7 +18,8 @@
 #include "lib/hash_func/murmur_hash.h"
 #include "lib/utility/ob_print_utils.h"
 #include "share/cache/ob_kvcache_struct.h"
-
+/** Note:表级别统计信息
+*/
 namespace oceanbase {
 namespace common {
 

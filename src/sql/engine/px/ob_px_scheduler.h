@@ -29,7 +29,15 @@
 #include "sql/engine/px/datahub/components/ob_dh_range_dist_wf.h"
 #include "sql/engine/px/datahub/components/ob_dh_second_stage_reporting_wf.h"
 #include "sql/engine/px/datahub/components/ob_dh_opt_stats_gather.h"
-
+/** Note:并行查询调度
+ * 调用:
+ * ob_dfo_mgr.cc接口,管理DFO
+ * ob_dfo_scheduler.cpp,负责DFO的调度
+ * 被调用:
+ * ob_px_fifo_coord_op.cpp
+ * ob_px_ms_coord_op.cpp
+ * ob_px_ordered_coord_op.cpp
+*/
 namespace oceanbase
 {
 namespace sql
@@ -138,7 +146,7 @@ public:
     return TableAccessType::PURE_VIRTUAL_TABLE == table_access_type_;
   }
 public:
-  ObDfoMgr dfo_mgr_;
+  ObDfoMgr dfo_mgr_;// Note:DFO管理类
   ObPieceMsgCtxMgr piece_msg_ctx_mgr_;
   obrpc::ObPxRpcProxy rpc_proxy_;
   bool all_threads_finish_; // QC 已经明确知道所有 task 都已经执行完成并释放了资源

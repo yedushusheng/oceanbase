@@ -609,6 +609,7 @@ int ObPxReceiveOp::send_channel_ready_msg(int64_t child_dfo_id)
     if (!proxy.get_recieve_use_interm_result()) {
       bool merge_finish = false;
       int64_t *curr_piece_cnt_ptr = nullptr;
+      // Note:ob_sqc_ctx.cpp接口
       if (OB_FAIL(proxy.sqc_ctx_.get_init_channel_msg_cnt(get_spec().id_, curr_piece_cnt_ptr))) {
         LOG_WARN("failed to get curr piece cnt", K(ret));
       } else if (OB_ISNULL(curr_piece_cnt_ptr)) {

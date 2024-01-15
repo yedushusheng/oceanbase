@@ -200,7 +200,7 @@ void PxWorkerFunctor::operator ()()
             ObPxRpcInitTaskArgs runtime_arg;
             if (OB_FAIL(runtime_arg.init_deserialize_param(mem_context, *env_arg_.get_gctx()))) {
               LOG_WARN("fail to init args", K(ret));
-            } else if (OB_FAIL(runtime_arg.deep_copy_assign(task_arg_, mem_context->get_arena_allocator()))) {
+            } else if (OB_FAIL(runtime_arg.deep_copy_assign(task_arg_, mem_context->get_arena_allocator()))) {// Note:
               (void) ObInterruptUtil::interrupt_qc(task_arg_.task_, ret, task_arg_.exec_ctx_);
               LOG_WARN("fail deep copy assign arg", K(task_arg_), K(ret));
             } else {
@@ -381,7 +381,12 @@ ObPxRpcWorkerFactory::~ObPxRpcWorkerFactory()
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-
+/**Note:外部接口
+ * 功能:生成Worker
+ * 调用:
+ * sql/engine/px/ob_px_sub_coord.cpp/ObPxSubCoord::dispatch_task_to_local_thread
+ * sql/engine/px/ob_px_sub_coord.cpp/ObPxSubCoord::dispatch_task_to_thread_pool
+*/
 ObPxThreadWorker * ObPxThreadWorkerFactory::create_worker()
 {
   ObPxThreadWorker *worker = NULL;
@@ -476,7 +481,10 @@ ObPxCoroWorkerFactory::~ObPxCoroWorkerFactory()
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-
+/** Note:外部接口
+ * 调用:
+ * ob_px_sub_coord.h/ObPxSubCoord::dispatch_task_to_local_thread
+*/
 ObPxWorkerRunnable *ObPxLocalWorkerFactory::create_worker()
 {
   return &worker_;

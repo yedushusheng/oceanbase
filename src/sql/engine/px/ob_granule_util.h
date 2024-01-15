@@ -19,7 +19,10 @@
 #include "sql/das/ob_das_define.h"
 #include "sql/ob_sql_define.h"
 #include "sql/engine/ob_engine_op_traits.h"
-
+/** Note:	granule的基本操作
+ * 在OceanBase中,每个扫描任务称为一个Granule,
+ * 这个扫描任务既可以是扫一个partition,也可以扫partition中的一小块范围.
+*/
 namespace oceanbase
 {
 namespace share {

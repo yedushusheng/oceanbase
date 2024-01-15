@@ -420,6 +420,13 @@ int ObOptStatSqlService::update_table_stat(const uint64_t tenant_id,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_opt_stat_manager.cpp/ObOptStatManager::update_column_stat
+ * ob_opt_stat_manager.cpp/ObOptStatManager::batch_write
+*/
 int ObOptStatSqlService::update_column_stat(share::schema::ObSchemaGetterGuard *schema_guard,
                                             const uint64_t exec_tenant_id,
                                             ObMySQLTransaction &trans,
@@ -466,7 +473,7 @@ int ObOptStatSqlService::update_column_stat(share::schema::ObSchemaGetterGuard *
                                                     is_history_stat,
                                                     insert_histogram,
                                                     need_histogram,
-                                                    print_params))) {
+                                                    print_params))) { // Note:
     LOG_WARN("failed to construct histogram insert sql", K(ret));
   } else if (!only_update_col_stat && !is_history_stat &&
               OB_FAIL(trans.write(exec_tenant_id, delete_histogram.ptr(), affected_rows))) {
@@ -565,6 +572,12 @@ int ObOptStatSqlService::construct_delete_column_histogram_sql(const uint64_t te
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptStatSqlService::update_column_stat
+*/
 int ObOptStatSqlService::construct_histogram_insert_sql(share::schema::ObSchemaGetterGuard *schema_guard,
                                                         const uint64_t tenant_id,
                                                         ObIAllocator &allocator,
@@ -614,7 +627,7 @@ int ObOptStatSqlService::construct_histogram_insert_sql(share::schema::ObSchemaG
         } else if (!need_histogram && OB_FAIL(insert_histogram_sql.append(INSERT_HISTOGRAM_STAT_SQL))) {
           LOG_WARN("failed to append sql", K(ret));
         } else if (OB_FAIL(get_histogram_stat_sql(tenant_id, *column_stats.at(i),
-                                                  allocator, hist.get(j), endpoint_meta, tmp, print_params))) {
+                                                  allocator, hist.get(j), endpoint_meta, tmp, print_params))) {// Note:
           LOG_WARN("failed to get histogram sql", K(ret));
         } else if (OB_FAIL(insert_histogram_sql.append_fmt("%s (%s)", (!need_histogram ? "" : ","), tmp.ptr()))) {
           LOG_WARN("failed to append sql", K(ret));
@@ -1010,6 +1023,12 @@ int ObOptStatSqlService::get_column_stat_history_sql(const uint64_t tenant_id,
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptStatSqlService::construct_histogram_insert_sql
+*/
 int ObOptStatSqlService::get_histogram_stat_sql(const uint64_t tenant_id,
                                                 const ObOptColumnStat &stat,
                                                 ObIAllocator &allocator,
@@ -1050,6 +1069,12 @@ int ObOptStatSqlService::get_histogram_stat_sql(const uint64_t tenant_id,
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptStatSqlService::construct_histogram_insert_sql
+*/
 int ObOptStatSqlService::get_histogram_stat_history_sql(const uint64_t tenant_id,
                                                         const ObOptColumnStat &stat,
                                                         ObIAllocator &allocator,
@@ -1469,6 +1494,12 @@ int ObOptStatSqlService::fetch_histogram_stat(const uint64_t tenant_id,
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptStatSqlService::fetch_histogram_stat
+*/
 int ObOptStatSqlService::fill_bucket_stat(ObIAllocator &allocator,
                                           sqlclient::ObMySQLResult &result,
                                           hash::ObHashMap<ObOptKeyInfo, int64_t> &key_index_map,

@@ -15,6 +15,9 @@
 
 #include "lib/ob_define.h"
 #include "sql/engine/ob_operator.h"
+/** Note:并行查询中的Exchange算子
+ * 具体实现在engine/px/exchange中
+*/
 namespace oceanbase
 {
 namespace sql

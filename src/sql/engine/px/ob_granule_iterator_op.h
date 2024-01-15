@@ -22,6 +22,11 @@
 #include "sql/rewrite/ob_query_range.h"
 #include "sql/engine/px/ob_granule_pump.h"
 #include "sql/engine/px/p2p_datahub/ob_p2p_dh_share_info.h"
+/** Note:并行查询计划执行中Granule Iterator算子
+ * Granual Iterator负责数据划分
+ * 除了Granule Iterator,Exchange算子,其余算子均可用于串行计划和并行计划.
+ * 算子本身不感知是否为并行(属于通用的,因此放在Engine),算子那也不会创建线程来执行计算任务.
+*/
 namespace oceanbase
 {
 namespace sql

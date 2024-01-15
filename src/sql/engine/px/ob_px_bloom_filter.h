@@ -21,7 +21,8 @@
 #include "observer/ob_server_struct.h"
 #ifndef __SQL_ENG_PX_BLOOM_FILTER_H__
 #define __SQL_ENG_PX_BLOOM_FILTER_H__
-
+/** Note:并行查询布隆过滤器
+*/
 namespace oceanbase
 {
 namespace sql

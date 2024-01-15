@@ -18,6 +18,8 @@
 #include "lib/container/ob_array.h"
 #include "lib/profile/ob_trace_id.h"
 
+/** Note:并行查询中Worker状态的收集
+*/
 namespace oceanbase
 {
 namespace sql

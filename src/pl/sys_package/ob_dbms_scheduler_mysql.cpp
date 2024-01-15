@@ -172,7 +172,7 @@ int ObDBMSSchedulerMysql::set_attribute(
                                                                           params.at(1).get_string(),
                                                                           params.at(2).get_string(),
                                                                           is_stat_window_attr,
-                                                                          dml))) {
+                                                                          dml))) {// Note:
       LOG_WARN("failed to is stats maintenance window attr", K(ret), K(params.at(0).get_string()),
                                         K(params.at(1).get_string()), K(params.at(2).get_string()));
     } else if (is_stat_window_attr) {

@@ -422,6 +422,7 @@ int ObPXServerAddrUtil::generate_dh_map_info(ObDfo &dfo)
         LOG_WARN("fail to get target dfo id", K(ret));
       } else if (node.addrs_.empty()) {
         ObDfo *target_dfo_ptr = nullptr;
+        // Note:ob_dfo_mgr.cc接口
         if (OB_FAIL(dfo.get_coord_info_ptr()->dfo_mgr_.find_dfo_edge(
             node.target_dfo_id_, target_dfo_ptr))) {
           LOG_WARN("fail to find dfo edge", K(ret));
@@ -3760,6 +3761,7 @@ int ObExtraServerAliveCheck::do_check() const
   int ret = OB_SUCCESS;
   if (NULL != dfo_mgr_) {
     ObSEArray<ObDfo *, 32> dfos;
+    // Note:ob_dfo_mgr.cc接口
     if (OB_FAIL(dfo_mgr_->get_running_dfos(dfos))) {
       LOG_WARN("fail find dfo", K(ret));
     } else {

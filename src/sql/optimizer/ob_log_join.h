@@ -15,6 +15,9 @@
 #include "ob_log_operator_factory.h"
 #include "ob_logical_operator.h"
 #include "ob_join_order.h"
+/** Note:ObLogJoin算子
+ * 它会综合左右孩子的分区信息,join算法,连接方法等计算出一个最终的sharding_info
+*/
 namespace oceanbase
 {
 namespace sql

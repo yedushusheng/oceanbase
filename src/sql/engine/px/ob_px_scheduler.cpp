@@ -55,6 +55,8 @@ namespace sql
 
 // 仅用于本 cpp 文件，所以可以放在这里
 // 专用于处理 datahub piece 消息的逻辑
+/** Note:内部类
+*/
 template <typename PieceMsg>
 class ObDhPieceMsgProc
 {
@@ -70,6 +72,7 @@ public:
     ObPieceMsgCtx *piece_ctx = nullptr;
     ObDfo *child_dfo = nullptr;
     // FIXME (TODO xiaochu)：这个 dfo id 不是必须的，本地可以维护一个 op_id 到 dfo id 的映射
+    // Note:ob_dfo_mgr.cc接口
     if (OB_FAIL(coord_info.dfo_mgr_.find_dfo_edge(pkt.source_dfo_id_, source_dfo))) {
       LOG_WARN("fail find dfo", K(pkt), K(ret));
     } else if (OB_FAIL(coord_info.dfo_mgr_.find_dfo_edge(pkt.target_dfo_id_, target_dfo))) {
@@ -105,6 +108,13 @@ public:
   }
 };
 
+/** Note:外部接口
+ * 根据不同的Exchange算子获取结果集操作的时候使用
+ * 调用:
+ * ob_px_fifo_coord_op.cpp/ObPxFifoCoordOp::fetch_rows
+ * ob_px_ms_coord_op.cpp/ObPxMSCoordOp::inner_get_next_row
+ * ob_px_ordered_coor_op.cpp/ObPxOrderedCoordOp::inner_get_next_row
+*/
 int ObPxMsgProc::on_process_end(ObExecContext &ctx)
 {
   UNUSED(ctx);
@@ -115,15 +125,23 @@ int ObPxMsgProc::on_process_end(ObExecContext &ctx)
 
 // entry function
 // 调度入口函数
+/** Note:外部接口
+ * 初始化DFO的分发
+ * 调用:
+ * ob_px_fifo_coord_op.cpp/ObPxFifoCoordOp::fetch_rows
+ * ob_px_ms_coord_op.cpp/ObPxMSCoordOp::inner_get_next_row
+ * ob_px_ordered_coor_op.cpp/ObPxOrderedCoordOp::inner_get_next_row
+*/
 int ObPxMsgProc::startup_msg_loop(ObExecContext &ctx)
 {
   int ret = OB_SUCCESS;
   LOG_TRACE("TIMERECORD ",
             "reserve:=-1 name:=QC dfoid:=-1 sqcid:=-1 taskid:=-1 start:",
             ObTimeUtility::current_time());
+  // Note:ob_dfo_scheduler.cpp接口
   if (OB_FAIL(scheduler_->prepare_schedule_info(ctx))) {
     LOG_WARN("fail to prepare schedule info", K(ret));
-  } else if (OB_FAIL(scheduler_->init_all_dfo_channel(ctx))) {
+  } else if (OB_FAIL(scheduler_->init_all_dfo_channel(ctx))) { // Note:ob_dfo_scheduler.cpp接口
     LOG_WARN("fail to init all dfo channel", K(ret));
   } else if (OB_FAIL(scheduler_->try_schedule_next_dfo(ctx))) {
     LOG_WARN("fail to sched next one dfo", K(ret));
@@ -159,6 +177,7 @@ int ObPxMsgProc::on_sqc_init_msg(ObExecContext &ctx, const ObPxInitSqcResultMsg 
 
   ObDfo *edge = NULL;
   ObPxSqcMeta *sqc = NULL;
+  // Note:ob_dfo_mgr.cc接口
   if (OB_FAIL(coord_info_.dfo_mgr_.find_dfo_edge(pkt.dfo_id_, edge))) {
     LOG_WARN("fail find dfo", K(pkt), K(ret));
   } else if (OB_ISNULL(edge)) {
@@ -206,6 +225,7 @@ int ObPxMsgProc::on_sqc_init_msg(ObExecContext &ctx, const ObPxInitSqcResultMsg 
         LOG_TRACE("on_sqc_init_msg: all sqc returned task count. ready to do on_sqc_threads_inited",
                   K(*edge));
         edge->set_thread_inited(true);
+        // Note:ob_dfo_scheduler.cpp接口
         ret = scheduler_->on_sqc_threads_inited(ctx, *edge);
       }
     }
@@ -298,6 +318,7 @@ int ObPxMsgProc::on_sqc_finish_msg(ObExecContext &ctx,
               "tx_desc", *session->get_tx_desc());
   }
   if (OB_FAIL(ret)) {
+    // Note:ob_dfo_mgr.cc接口
   } else if (OB_FAIL(coord_info_.dfo_mgr_.find_dfo_edge(pkt.dfo_id_, edge))) {
     LOG_WARN("fail find dfo", K(pkt), K(ret));
   } else if (OB_FAIL(edge->get_sqc(pkt.sqc_id_, sqc))) {
@@ -500,6 +521,7 @@ int ObPxMsgProc::on_dfo_pair_thread_inited(ObExecContext &ctx, ObDfo &child, ObD
   // 然后重新尝试分配线程。在这种情形下， DTL Map 也要跟着变化
   //
   if (OB_SUCC(ret)) {
+    // Note:ob_dfo_shceduler.cpp接口
     if (OB_FAIL(scheduler_->build_data_xchg_ch(ctx, child, parent))) {
       LOG_WARN("fail init dtl data channel", K(ret));
     } else {
@@ -551,7 +573,7 @@ int ObPxTerminateMsgProc::on_sqc_init_msg(ObExecContext &ctx, const ObPxInitSqcR
   if (pkt.task_count_ <= 0) {
     ret = OB_ERR_UNEXPECTED;
     LOG_WARN("task count returned by sqc invalid. expect 1 or more", K(pkt), K(ret));
-  } else if (OB_FAIL(coord_info_.dfo_mgr_.find_dfo_edge(pkt.dfo_id_, edge))) {
+  } else if (OB_FAIL(coord_info_.dfo_mgr_.find_dfo_edge(pkt.dfo_id_, edge))) {// Note:ob_dfo_mgr.cc接口
     LOG_WARN("fail find dfo", K(pkt), K(ret));
   } else if (OB_ISNULL(edge)) {
     ret = OB_ERR_UNEXPECTED;
@@ -625,7 +647,7 @@ int ObPxTerminateMsgProc::on_sqc_finish_msg(ObExecContext &ctx, const ObPxFinish
               "tx_desc", *session->get_tx_desc());
   }
   if (OB_FAIL(ret)) {
-  } else if (OB_FAIL(coord_info_.dfo_mgr_.find_dfo_edge(pkt.dfo_id_, edge))) {
+  } else if (OB_FAIL(coord_info_.dfo_mgr_.find_dfo_edge(pkt.dfo_id_, edge))) {// Note:ob_dfo_mgr.cc接口
     LOG_WARN("fail find dfo", K(pkt), K(ret));
   } else if (OB_FAIL(edge->get_sqc(pkt.sqc_id_, sqc))) {
     LOG_WARN("fail find sqc", K(pkt), K(ret));

@@ -21,7 +21,8 @@
 #include "share/schema/ob_multi_version_schema_service.h"
 #include "share/ob_cluster_role.h"
 #include <random>
-
+/** Note:RootService的Zone资源管理相关
+*/
 namespace oceanbase
 {
 namespace obrpc

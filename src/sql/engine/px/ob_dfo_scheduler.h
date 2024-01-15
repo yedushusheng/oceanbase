@@ -15,7 +15,13 @@
 
 #include "sql/engine/px/ob_dfo_mgr.h"
 #include "sql/engine/px/ob_px_util.h"
-
+/** Note:子计划DFO调度的接口
+ * 分为串行化和并行化两种
+ * 调用:
+ * ob_px_sqc_async_proxy.cpp
+ * 被调用:
+ * ob_px_scheduler.cpp
+*/
 namespace oceanbase
 {
 namespace sql

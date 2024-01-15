@@ -25,7 +25,21 @@
 #include "sql/engine/px/datahub/components/ob_dh_sample.h"
 #include "sql/engine/px/datahub/components/ob_dh_init_channel.h"
 
-
+/** Note:SQC的代理
+ * 实现一个report接口将结果向QC汇报
+ * QC:Query Coordinator
+ * > 创建SQC
+ * > 下发配置信息创建Channel map逻辑通道
+ * > 全局调度SQC
+ * SQC:Sub QC
+ * > 接受调度消息,启动worker线程并对worker进行全周期管理
+ * worker:
+ * > 现成任务执行DFO子计划
+ * 调用:
+ * 
+ * 被调用:
+ * ob_join_filter_op.cpp
+*/
 namespace oceanbase
 {
 namespace sql

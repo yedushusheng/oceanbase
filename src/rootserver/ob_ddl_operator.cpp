@@ -5330,7 +5330,7 @@ int ObDDLOperator::init_tenant_optimizer_stats_info(const ObSysVariableSchema &s
                                                                         sys_variable,
                                                                         tenant_id,
                                                                         jobs_sql,
-                                                                        expected_affected_rows2))) {
+                                                                        expected_affected_rows2))) {// Note:
     LOG_WARN("failed tto get stats maintenance window jobs sql", K(ret), K(jobs_sql));
   } else if (OB_UNLIKELY(prefs_sql.empty() || jobs_sql.empty())) {
     ret = OB_ERR_UNEXPECTED;

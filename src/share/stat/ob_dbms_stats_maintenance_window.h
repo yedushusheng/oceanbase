@@ -32,7 +32,12 @@
 #define DEFAULT_NON_WORKING_DAY_DURATION_SEC (20 * 60 * 60)
 #define DEFAULT_NON_WORKING_DAY_DURATION_USEC (20 * 60 * 60 * 1000000LL)
 #define DEFAULT_DML_STATS_INTERVAL_USEC (15*60*1000000LL)
-
+/** Note:展示当前租户下所有调度程序窗口的信息
+ * 对应系统视图oceanbase.DBA_SCHEDULER_WINDOWS
+ * 调用:
+ * pl/sys_package/ob_dbms_scheduler_mysql.cpp
+ * rootserver/ob_ddl_operator.cpp
+*/
 namespace oceanbase {
 
 namespace common {

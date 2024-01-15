@@ -45,6 +45,11 @@ int ObSqcCtx::add_whole_msg_provider(uint64_t op_id, dtl::ObDtlMsgType msg_type,
   return whole_msg_provider_list_.push_back(&provider);
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_coord_msg_proc.cpp/ObDhWholeeMsgProc::on_whole_msg
+ * engine/window_function/ob_window_function_op.cpp/ObWindowFunctionOp::get_participator_whole_msg
+*/
 int ObSqcCtx::get_whole_msg_provider(uint64_t op_id, dtl::ObDtlMsgType msg_type, ObPxDatahubDataProvider *&provider)
 {
   int ret = OB_SUCCESS;
@@ -67,6 +72,10 @@ int ObSqcCtx::get_whole_msg_provider(uint64_t op_id, dtl::ObDtlMsgType msg_type,
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * exchange/ob_px_receive_op.cpp/ObPxReceiveOp::send_channel_ready_msg
+*/
 int ObSqcCtx::get_init_channel_msg_cnt(uint64_t op_id, int64_t *&curr_piece_cnt)
 {
   int ret = OB_SUCCESS;

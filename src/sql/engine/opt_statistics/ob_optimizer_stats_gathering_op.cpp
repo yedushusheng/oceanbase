@@ -417,6 +417,13 @@ int ObOptimizerStatsGatheringOp::calc_table_stats(int64_t &row_len)
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::inner_get_next_row
+ * ObOptimizerStatsGatheringOp::inner_get_next_batch
+*/
 int ObOptimizerStatsGatheringOp::calc_stats()
 {
   int ret = OB_SUCCESS;
@@ -429,6 +436,12 @@ int ObOptimizerStatsGatheringOp::calc_stats()
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::on_piece_msg
+*/
 int ObOptimizerStatsGatheringOp::merge_tab_stat(ObOptTableStat *src_tab_stat)
 {
   int ret = OB_SUCCESS;
@@ -465,6 +478,12 @@ int ObOptimizerStatsGatheringOp::merge_tab_stat(ObOptTableStat *src_tab_stat)
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::on_piece_msg
+*/
 int ObOptimizerStatsGatheringOp::merge_col_stat(ObOptColumnStat *src_col_stat)
 {
   int ret = OB_SUCCESS;
@@ -503,6 +522,12 @@ int ObOptimizerStatsGatheringOp::merge_col_stat(ObOptColumnStat *src_col_stat)
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * sql/engine/px/datahub/components/ob_dh_opt_stats_gather.cpp/ObOptStatsGatherPieceMsgListener::on_message
+*/
 int ObOptimizerStatsGatheringOp::on_piece_msg(const ObOptStatsGatherPieceMsg &piece_msg)
 {
   int ret = OB_SUCCESS;
@@ -531,6 +556,13 @@ int ObOptimizerStatsGatheringOp::on_piece_msg(const ObOptStatsGatherPieceMsg &pi
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::inner_get_next_row
+ * ObOptimizerStatsGatheringOp::inner_get_next_batch
+*/
 int ObOptimizerStatsGatheringOp::msg_end()
 {
   int ret = OB_SUCCESS;
@@ -552,13 +584,19 @@ int ObOptimizerStatsGatheringOp::msg_end()
                                                               param,
                                                               schema_guard,
                                                               get_tab_stat_map(),
-                                                              col_stat_map))) {
+                                                              col_stat_map))) {// Note:
       LOG_WARN("fail to update tab/col stats", K(ret));
     }
   }
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::msg_end
+*/
 int ObOptimizerStatsGatheringOp::get_col_stat_map(ColStatIndMap &col_stat_map)
 {
   int ret = OB_SUCCESS;
@@ -585,6 +623,12 @@ int ObOptimizerStatsGatheringOp::get_col_stat_map(ColStatIndMap &col_stat_map)
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::msg_end
+*/
 int ObOptimizerStatsGatheringOp::generate_stat_param(ObTableStatParam &param)
 {
   int ret = OB_SUCCESS;
@@ -625,6 +669,12 @@ int ObOptimizerStatsGatheringOp::generate_stat_param(ObTableStatParam &param)
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::build_piece_msg
+*/
 int ObOptimizerStatsGatheringOp::get_col_stats(common::ObIArray<ObOptColumnStat*>& col_stats)
 {
   int ret = OB_SUCCESS;
@@ -642,6 +692,12 @@ int ObOptimizerStatsGatheringOp::get_col_stats(common::ObIArray<ObOptColumnStat*
   return ret;
 }
 
+/** Note:内部函数
+ * 功能:
+ * 
+ * 调用:
+ * ObOptimizerStatsGatheringOp::build_piece_msg
+*/
 int ObOptimizerStatsGatheringOp::get_tab_stats(common::ObIArray<ObOptTableStat*>& tab_stats)
 {
   int ret = OB_SUCCESS;

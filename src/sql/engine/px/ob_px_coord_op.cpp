@@ -419,6 +419,7 @@ int ObPxCoordOp::post_init_op_ctx()
 int ObPxCoordOp::init_dfo_mgr(const ObDfoInterruptIdGen &dfo_id_gen, ObDfoMgr &dfo_mgr)
 {
   int ret = OB_SUCCESS;
+  // Note:ob_dfo_mgr.cpp接口
   if (OB_FAIL(dfo_mgr.init(ctx_, get_spec(), dfo_id_gen, coord_info_))) {
     LOG_WARN("fail init dfo mgr", K(ret));
   }
@@ -430,6 +431,7 @@ int ObPxCoordOp::terminate_running_dfos(ObDfoMgr &dfo_mgr)
   int ret = OB_SUCCESS;
   // notify all running dfo exit
   ObSEArray<ObDfo *, 32> dfos;
+  // Note:ob_dfo_mgr.cc接口
   if (OB_FAIL(dfo_mgr.get_running_dfos(dfos))) {
     LOG_WARN("fail find dfo", K(ret));
   } else if (OB_FAIL(ObInterruptUtil::broadcast_px(dfos, OB_GOT_SIGNAL_ABORTING))) {
@@ -707,6 +709,8 @@ int ObPxCoordOp::try_link_channel()
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObPxCoordOp::wait_all_running_dfos_exit()
 {
   int ret = OB_SUCCESS;
@@ -715,6 +719,7 @@ int ObPxCoordOp::wait_all_running_dfos_exit()
   bool all_dfo_terminate = false;
   int64_t nth_channel = OB_INVALID_INDEX_INT64;
   bool collect_trans_result_ok = false;
+  // Note:ob_dfo_mgr.cc接口
   if (OB_FAIL(coord_info_.dfo_mgr_.get_running_dfos(active_dfos))) {
     LOG_WARN("fail find dfo", K(ret));
   } else if (OB_UNLIKELY(!first_row_fetched_)) {
@@ -841,6 +846,8 @@ int ObPxCoordOp::wait_all_running_dfos_exit()
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObPxCoordOp::check_all_sqc(ObIArray<ObDfo *> &active_dfos,
                                int64_t &times_offset,
                                bool &all_dfo_terminate,
@@ -893,6 +900,8 @@ int ObPxCoordOp::check_all_sqc(ObIArray<ObDfo *> &active_dfos,
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObPxCoordOp::register_interrupt()
 {
   int ret = OB_SUCCESS;
@@ -908,6 +917,8 @@ int ObPxCoordOp::register_interrupt()
   return ret;
 }
 
+/** Note:外部接口
+*/
 void ObPxCoordOp::clear_interrupt()
 {
   if (register_interrupted_) {

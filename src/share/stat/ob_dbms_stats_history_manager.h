@@ -18,7 +18,12 @@
 #include "share/stat/ob_stat_item.h"
 #include "share/stat/ob_opt_table_stat.h"
 #include "share/stat/ob_opt_column_stat_cache.h"
-
+/** Note:统计信息历史库管理
+ * 调用:
+ * ob_dbms_stats.cpp
+ * ob_dbms_stats_executor.cpp
+ * ob_dbms_stats_export_import.cpp
+*/
 namespace oceanbase {
 using namespace sql;
 namespace common {

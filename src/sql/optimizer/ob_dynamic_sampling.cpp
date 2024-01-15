@@ -400,7 +400,7 @@ int ObDynamicSampling::get_table_dml_info(const uint64_t tenant_id,
                                                                     tenant_id,
                                                                     table_id,
                                                                     cur_modified_dml_cnt,
-                                                                    false))) {
+                                                                    false))) {// Note:
     LOG_WARN("failed to estimate modified count", K(ret));
   } else if (OB_FAIL(pl::ObDbmsStats::get_table_stale_percent_threshold(*ctx_->get_exec_ctx(),
                                                                         tenant_id,
@@ -859,7 +859,7 @@ int ObDynamicSampling::estimate_table_micro_block_count(const ObDSTableParam &pa
                                                                     param.table_id_,
                                                                     tablet_ids,
                                                                     partition_ids,
-                                                                    estimate_result))) {
+                                                                    estimate_result))) {// Note:
     LOG_WARN("failed to do estimate block count", K(ret));
   } else {
     for (int64_t i = 0; i < estimate_result.count(); ++i) {

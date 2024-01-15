@@ -370,6 +370,7 @@ void ObDedupQueue::run1()
       } else if (NULL != task2process) {
         thread_meta.on_process_start(task2process);
         task2process->process();
+        // Note:ob_px_scheduler.cpp接口
         thread_meta.on_process_end();
 
         gc_queue_sync_.lock();

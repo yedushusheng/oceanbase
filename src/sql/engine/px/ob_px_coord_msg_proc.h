@@ -15,7 +15,14 @@
 
 #include "sql/engine/px/ob_dfo.h"
 #include "sql/engine/px/ob_px_dtl_msg.h"
-
+/** Note:并行查询中Coordinator消息处理接口
+ * 这个是DTL进行数据传输的时候使用
+ * 调用:
+ * ob_px_dtl_proc.cpp
+ * ob_sqc_ctx.cpp
+ * 被调用:
+ * ob_px_dtl_proc.cpp
+*/
 namespace oceanbase
 {
 namespace sql

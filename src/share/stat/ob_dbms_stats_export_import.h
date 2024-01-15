@@ -17,6 +17,12 @@
 #include "sql/engine/ob_exec_context.h"
 #include "share/stat/ob_stat_item.h"
 
+/** Note:统计信息导入导出
+ * 功能:
+ * PL存储过程调用,实现统计信息的导入与导出
+ * 调用:
+ * ob_dbms_stats.cpp
+*/
 namespace oceanbase {
 using namespace sql;
 namespace common {

@@ -2479,6 +2479,7 @@ int ObOptSelectivity::do_calc_range_selectivity(const double min,
       } else if (fabs(max - min) < OB_DOUBLE_EPSINON) {
         selectivity = fabs(end - start) < OB_DOUBLE_EPSINON ? 1.0 : 0.0;
       } else {
+        // Note:计算选择率
         selectivity = (end - start) / (max - min);
         selectivity = revise_range_sel(selectivity, ndv, discrete,
                                        flags.inclusive_start(),

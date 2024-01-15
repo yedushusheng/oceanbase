@@ -22,7 +22,8 @@
 #include "share/ob_ddl_common.h"
 #include "share/longops_mgr/ob_ddl_longops.h"
 #include "rootserver/ddl_task/ob_ddl_single_replica_executor.h"
-
+/** Note:RootService管理DDL任务
+*/
 namespace oceanbase
 {
 namespace rootserver

@@ -29,6 +29,10 @@
 using namespace oceanbase::common;
 using namespace oceanbase::sql;
 
+/** Note:外部接口
+ * 调用:
+ * observer/ob_srv_xlator_partition.cpp/oceanbase::observer::init_srv_xlator_for_others
+*/
 int ObInitSqcP::init()
 {
   int ret = OB_SUCCESS;
@@ -252,6 +256,10 @@ int ObInitSqcP::after_process(int error_code)
 }
 
 // 已经未使用了，后续移除
+/** Note:外部接口
+ * 调用:
+ * observer/ob_srv_xlator_partition.cpp/oceanbase::observer::init_srv_xlator_for_others
+*/
 int ObInitTaskP::init()
 {
   return OB_NOT_SUPPORTED;
@@ -289,6 +297,10 @@ void ObFastInitSqcReportQCMessageCall::operator()(hash::HashMapPair<ObInterrupti
   }
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_dfo_scheduler.cpp/ObSerialDfoScheduler::dispatch_sqcs
+*/
 int ObFastInitSqcReportQCMessageCall::mock_sqc_finish_msg()
 {
   int ret = OB_SUCCESS;
@@ -344,6 +356,10 @@ int ObFastInitSqcReportQCMessageCall::mock_sqc_finish_msg()
   return ret;
 }
 // ObInitFastSqcP相关函数.
+/** Note:外部接口
+ * 调用:
+ * observer/ob_srv_xlator_partition.cpp/oceanbase::observer::init_srv_xlator_for_others
+*/
 int ObInitFastSqcP::init()
 {
   int ret = OB_SUCCESS;
@@ -466,6 +482,10 @@ int ObInitFastSqcP::startup_normal_sqc(ObPxSqcHandler &sqc_handler)
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_rpc_processor.cpp/ObSerialDfoScheduler::dispatch_sqcs
+*/
 void ObFastInitSqcCB::on_timeout()
 {
   int ret = OB_TIMEOUT;
@@ -537,6 +557,8 @@ void ObFastInitSqcCB::interrupt_qc(int err, bool is_timeout)
   }
 }
 
+/** Note:内部函数
+*/
 void ObDealWithRpcTimeoutCall::deal_with_rpc_timeout_err()
 {
   if (OB_TIMEOUT == ret_) {
@@ -559,6 +581,8 @@ void ObDealWithRpcTimeoutCall::deal_with_rpc_timeout_err()
   }
 }
 
+/** Note:内部函数
+*/
 void ObDealWithRpcTimeoutCall::operator() (hash::HashMapPair<ObInterruptibleTaskID,
       ObInterruptCheckerNode *> &entry)
 {
@@ -566,6 +590,10 @@ void ObDealWithRpcTimeoutCall::operator() (hash::HashMapPair<ObInterruptibleTask
   deal_with_rpc_timeout_err();
 }
 
+/** Note:外部接口
+ * 调用:
+ * observer/ob_srv_xlator_partition.cpp/oceanbase::observer::init_srv_xlator_for_others
+*/
 int ObPxTenantTargetMonitorP::init()
 {
   return OB_SUCCESS;
@@ -639,6 +667,10 @@ int ObPxTenantTargetMonitorP::process()
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * observer/ob_srv_xlator_partition.cpp/oceanbase::observer::init_srv_xlator_for_others
+*/
 int ObPxCleanDtlIntermResP::process()
 {
   int ret = OB_SUCCESS;

@@ -14,7 +14,10 @@
 #define OCEANBASE_SQL_OB_LOG_SORT_H
 #include "lib/container/ob_array.h"
 #include "sql/optimizer/ob_logical_operator.h"
-
+/** Note:LogicPlan Sort算子
+ * 每个算子都实现了allocate_exchange_post()方法,负责声明自己的分区信息.
+ * 有些算子本身不会感知到分区,它会继承child的分区信息
+*/
 namespace oceanbase
 {
 namespace sql

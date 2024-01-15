@@ -17,7 +17,8 @@
 #include "sql/engine/px/ob_dfo.h"
 #include "sql/engine/px/ob_px_dtl_msg.h"
 #include "sql/dtl/ob_dtl_task.h"
-
+/** Note:并行查询中数据修改的生产者
+*/
 namespace oceanbase
 {
 namespace sql

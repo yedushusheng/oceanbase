@@ -399,6 +399,15 @@ int ObDbmsStatsExportImport::export_column_stats(ObExecContext &ctx, const ObTab
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ObDbmsStats::import_table_stats
+ * ObDbmsStats::import_schema_stats
+ * ObDbmsStats::import_index_stats
+ * ObDbmsStats::import_table_index_stats
+*/
 int ObDbmsStatsExportImport::import_table_stats(ObExecContext &ctx, const ObTableStatParam &param)
 {
   int ret = OB_SUCCESS;
@@ -443,6 +452,12 @@ int ObDbmsStatsExportImport::import_table_stats(ObExecContext &ctx, const ObTabl
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ObDbmsStats::import_column_stats
+*/
 int ObDbmsStatsExportImport::import_column_stats(ObExecContext &ctx, const ObTableStatParam &param)
 {
   int ret = OB_SUCCESS;

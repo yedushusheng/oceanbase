@@ -91,6 +91,11 @@ OB_DEF_SERIALIZE_SIZE(ObOptStatsGatherPieceMsg)
 
 OB_SERIALIZE_MEMBER((ObOptStatsGatherWholeMsg, ObDatahubWholeMsg), ready_state_);
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+*/
 int ObOptStatsGatherPieceMsgListener::on_message(
   ObOptStatsGatherPieceMsgCtx &piece_ctx,
   common::ObIArray<ObPxSqcMeta *> &sqcs,
@@ -113,7 +118,7 @@ int ObOptStatsGatherPieceMsgListener::on_message(
       LOG_WARN("get unexpected op", K(ret), K(kit->op_->get_spec().type_));
     } else {
       osg_op = static_cast<ObOptimizerStatsGatheringOp *>(kit->op_);
-      if (OB_FAIL(osg_op->on_piece_msg(pkt))) {
+      if (OB_FAIL(osg_op->on_piece_msg(pkt))) {// Note:
         LOG_WARN("fail to call on piece msg", K(ret));
       }
     }

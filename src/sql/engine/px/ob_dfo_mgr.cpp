@@ -29,6 +29,8 @@
 using namespace oceanbase::common;
 using namespace oceanbase::sql;
 
+/** Note:内部函数
+*/
 int ObDfoSchedOrderGenerator::generate_sched_order(ObDfoMgr &dfo_mgr)
 {
    int ret = OB_SUCCESS;
@@ -46,6 +48,8 @@ int ObDfoSchedOrderGenerator::generate_sched_order(ObDfoMgr &dfo_mgr)
 
 // 正规化后的 dfo_tree 后序遍历顺序，即为调度顺序
 // 用 edge 数组表示这种顺序
+/** Note:内部函数
+*/
 int ObDfoSchedOrderGenerator::do_generate_sched_order(ObDfoMgr &dfo_mgr, ObDfo &root)
 {
   int ret = OB_SUCCESS;
@@ -64,6 +68,8 @@ int ObDfoSchedOrderGenerator::do_generate_sched_order(ObDfoMgr &dfo_mgr, ObDfo &
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedDepthGenerator::generate_sched_depth(ObExecContext &exec_ctx,
                                                    ObDfoMgr &dfo_mgr)
 {
@@ -81,6 +87,8 @@ int ObDfoSchedDepthGenerator::generate_sched_depth(ObExecContext &exec_ctx,
 }
 
 // dfo_tree 后序遍历，定出哪些 dfo 可以做 material op bypass
+/** Note:内部函数
+*/
 int ObDfoSchedDepthGenerator::do_generate_sched_depth(ObExecContext &exec_ctx,
                                                       ObDfoMgr &dfo_mgr,
                                                       ObDfo &parent)
@@ -117,6 +125,8 @@ int ObDfoSchedDepthGenerator::do_generate_sched_depth(ObExecContext &exec_ctx,
   return ret;
 }
 
+/** Note:内部函数
+*/
 bool ObDfoSchedDepthGenerator::check_if_need_do_earlier_sched(ObDfo &child)
 {
   bool do_earlier_sched = false;
@@ -134,11 +144,15 @@ bool ObDfoSchedDepthGenerator::check_if_need_do_earlier_sched(ObDfo &child)
   return do_earlier_sched;
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedDepthGenerator::try_set_dfo_unblock(ObExecContext &exec_ctx, ObDfo &dfo)
 {
   return try_set_dfo_block(exec_ctx, dfo, false/*unblock*/);
 }
 
+/** Note:内部函数
+*/
 int ObDfoSchedDepthGenerator::try_set_dfo_block(ObExecContext &exec_ctx, ObDfo &dfo, bool block)
 {
   int ret = OB_SUCCESS;
@@ -167,6 +181,8 @@ int ObDfoSchedDepthGenerator::try_set_dfo_block(ObExecContext &exec_ctx, ObDfo &
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoWorkerAssignment::calc_admited_worker_count(const ObIArray<ObDfo*> &dfos,
                                                      ObExecContext &exec_ctx,
                                                      const ObOpSpec &root_op_spec,
@@ -216,6 +232,8 @@ int ObDfoWorkerAssignment::calc_admited_worker_count(const ObIArray<ObDfo*> &dfo
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoWorkerAssignment::assign_worker(ObDfoMgr &dfo_mgr,
                                          int64_t expected_worker_count,
                                          int64_t minimal_worker_count,
@@ -333,6 +351,8 @@ int ObDfoWorkerAssignment::assign_worker(ObDfoMgr &dfo_mgr,
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoWorkerAssignment::get_dfos_worker_count(const ObIArray<ObDfo*> &dfos,
                                                  const bool get_minimal,
                                                  int64_t &total_assigned)
@@ -386,6 +406,10 @@ int ObDfoWorkerAssignment::get_dfos_worker_count(const ObIArray<ObDfo*> &dfos,
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * 
+*/
 void ObDfoMgr::destroy()
 {
   // release all dfos
@@ -400,6 +424,10 @@ void ObDfoMgr::destroy()
   inited_ = false;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_coord_op.cpp/ObPxCoordOp::init_dfo_mgr
+*/
 int ObDfoMgr::init(ObExecContext &exec_ctx,
                    const ObOpSpec &root_op_spec,
                    const ObDfoInterruptIdGen &dfo_int_gen,
@@ -439,6 +467,10 @@ int ObDfoMgr::init(ObExecContext &exec_ctx,
 }
 
 // parent_dfo 作为输入输出参数，仅仅在第一个 op 为 coord 时才作为输出参数，其余时候都作为输入参数
+/** Note:内部函数
+ * 调用:
+ * 
+*/
 int ObDfoMgr::do_split(ObExecContext &exec_ctx,
                        ObIAllocator &allocator,
                        const ObOpSpec *phy_op,
@@ -687,6 +719,8 @@ int ObDfoMgr::do_split(ObExecContext &exec_ctx,
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoMgr::create_dfo(ObIAllocator &allocator,
                          const ObOpSpec *dfo_root_op,
                          ObDfo *&dfo) const
@@ -712,6 +746,10 @@ int ObDfoMgr::create_dfo(ObIAllocator &allocator,
 
 // get_ready_dfo接口仅用于单层dfo调度.
 // 每次迭代一个dfo出来.
+/** Note:外部接口
+ * 调用:
+ * ob_dfo_scheduler.cpp/ObSerialDfoScheduler::try_schedule_next_dfo
+*/
 int ObDfoMgr::get_ready_dfo(ObDfo *&dfo) const
 {
   int ret = OB_SUCCESS;
@@ -740,6 +778,10 @@ int ObDfoMgr::get_ready_dfo(ObDfo *&dfo) const
 //   - 如果有 edge 还没有 finish，且不能调度更多 dfo，则返回空集合
 //   - 如果所有 edge 都已经 finish，则返回 ITER_END
 // 每次只迭代出一对 DFO，child & parent
+/** Note:外部接口
+ * 调用:
+ * df_dfo_scheduler.ccp/ObParallelDfoScheduler::try_schedule_next_dfo
+*/
 int ObDfoMgr::get_ready_dfos(ObIArray<ObDfo*> &dfos) const
 {
   int ret = OB_SUCCESS;
@@ -876,6 +918,8 @@ int ObDfoMgr::get_ready_dfos(ObIArray<ObDfo*> &dfos) const
   return ret;
 }
 
+/** Note:内部函数
+*/
 int ObDfoMgr::add_dfo_edge(ObDfo *edge)
 {
   int ret = OB_SUCCESS;
@@ -891,6 +935,14 @@ int ObDfoMgr::add_dfo_edge(ObDfo *edge)
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_scheduler.cpp/ObDhPieceMsgProc::on_piece_msg
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_sqc_init_msg
+ * ob_px_scheduler.cpp/ObPxMsgProc::on_sqc_finish_msg
+ * ob_px_scheduler.cpp/ObPxTerminateMsgProc::on_sqc_init_msg
+ * ob_px_scheduler.cpp/ObPxTerminateMsgProc::on_sqc_finish_msg
+*/
 int ObDfoMgr::find_dfo_edge(int64_t id, ObDfo *&edge)
 {
   int ret = OB_SUCCESS;
@@ -915,6 +967,8 @@ int ObDfoMgr::find_dfo_edge(int64_t id, ObDfo *&edge)
   return ret;
 }
 
+/** Note:未调用
+*/
 int ObDfoMgr::get_active_dfos(ObIArray<ObDfo*> &dfos) const
 {
   int ret = OB_SUCCESS;
@@ -932,6 +986,8 @@ int ObDfoMgr::get_active_dfos(ObIArray<ObDfo*> &dfos) const
   return ret;
 }
 
+/** Note:未调用
+*/
 int ObDfoMgr::get_scheduled_dfos(ObIArray<ObDfo*> &dfos) const
 {
   int ret = OB_SUCCESS;
@@ -948,6 +1004,12 @@ int ObDfoMgr::get_scheduled_dfos(ObIArray<ObDfo*> &dfos) const
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_coor_op.cc/ObPxCoordOp::terminate_running_dfos
+ * ob_px_coor_op.cc/ObPxCoordOp::wait_all_running_dfos_exit
+ * ob_px_util.cpp/ObExtraServerAliveCheck::do_check
+*/
 int ObDfoMgr::get_running_dfos(ObIArray<ObDfo*> &dfos) const
 {
   int ret = OB_SUCCESS;

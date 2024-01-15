@@ -35,6 +35,13 @@
 #include "lib/string/ob_strings.h"
 #include "share/external_table/ob_external_table_file_mgr.h"
 #include "share/detect/ob_detect_callback.h"
+/** Note:DFO的相关操作接口(有向无环图)
+ * DFO (Data Flow Object)
+ * 分布式并行执行计划中,若干个需要在一起流水线执行的算子集合,有时也被称为子计划.
+ * 调用:
+ * 1.ob_px_worker.cpp接口
+ * 2.ob_dfo_mgr.cpp
+*/
 namespace oceanbase
 {
 

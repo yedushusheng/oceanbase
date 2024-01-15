@@ -16,6 +16,13 @@
 #include "lib/container/ob_se_array.h"
 #include "sql/engine/px/ob_dfo.h"
 
+/** Note:DFO管理接口(PartialPlan/SubPlan)
+ * ObPxCoord会将计划划分成多个DFO[子计划],保存到ObDfoMgr中,然后逐步调度执行这些DFO
+ * 调用:
+ * 1.ob_px_scheduler.cpp
+ * 2.df_dfo_scheduler.ccp
+ * 3.ob_px_coord_op.cpp
+*/
 namespace oceanbase
 {
 namespace sql

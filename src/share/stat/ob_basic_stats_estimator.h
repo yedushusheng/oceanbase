@@ -15,7 +15,13 @@
 
 #include "share/stat/ob_stats_estimator.h"
 #include "share/stat/ob_stat_item.h"
-
+/** Note:数据估算
+ * 调用:
+ * ob_dbms_stats_executor.cpp
+ * ob_incremental_stat_estimator.cpp
+ * ob_index_stats_estimator.cpp
+ * sql/optimizer/ob_dynamic_sampling.cpp
+*/
 namespace oceanbase
 {
 using namespace sql;

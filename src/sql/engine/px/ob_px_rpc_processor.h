@@ -19,7 +19,16 @@
 #include "sql/engine/ob_des_exec_context.h"
 #include "sql/engine/ob_physical_plan.h"
 
-
+/** Note:RPC Process处理接口
+ * 调用:
+ * ob_px_sub_coord.cpp,SQC的操作接口
+ *  ->ob_px_worker.cpp,Worker接口
+ *    ->ob_dfo.cpp,管理DFO
+ *    ->ob_px_task_process.cpp,管理Task执行
+ * 被调用:
+ * observer/ob_srv_xlator_partition.cpp,OBServer的主要接口在PX并行中的应用
+ * ob_dfo_scheduler.cpp
+*/
 namespace oceanbase {
 namespace sql {
 

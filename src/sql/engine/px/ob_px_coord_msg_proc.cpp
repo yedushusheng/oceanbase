@@ -32,6 +32,7 @@ public:
   {
     int ret = OB_SUCCESS;
     ObPxDatahubDataProvider *p = nullptr;
+    // Note:ob_sqc_ctx.cpp接口
     if (OB_FAIL(sqc_ctx.get_whole_msg_provider(pkt.op_id_, msg_type, p))) {
       LOG_WARN("fail get whole msg provider", K(ret));
     } else {
@@ -45,7 +46,10 @@ public:
   }
 };
 
-
+/** Note:外部接口
+ * 调用:
+ * ob_px_dtl_proc.cpp/ObPxTransmitDataChannelMsgP::process
+*/
 int ObPxSubCoordMsgProc::on_transmit_data_ch_msg(
     const ObPxTransmitDataChannelMsg &pkt) const
 {
@@ -56,7 +60,10 @@ int ObPxSubCoordMsgProc::on_transmit_data_ch_msg(
   return ret;
 }
 
-
+/** Note:外部接口
+ * 调用:
+ * ob_px_dtl_proc.cpp/ObPxReceiveDataChannelMsgP::process
+*/
 int ObPxSubCoordMsgProc::on_receive_data_ch_msg(
     const ObPxReceiveDataChannelMsg &pkt) const
 {
@@ -73,6 +80,11 @@ int ObPxSubCoordMsgProc::on_receive_data_ch_msg(
 
 // NOTE：QC、Task 都可以中断 SQC，如果 SQC 处于收消息流程中，会调用本方法
 // 如果 SQC 已经离开了收消息流程，则不会触发本方法。
+/** Note:外部接口
+ * 调用:
+ * ob_px_dtl_proc.cpp/ObPxQcInterruptedP::process
+ * ob_px_dtl_proc.cpp/ObPxSqcInterruptedP::process
+*/
 int ObPxSubCoordMsgProc::on_interrupted(const ObInterruptCode &ic) const
 {
   int ret = OB_SUCCESS;
@@ -83,6 +95,10 @@ int ObPxSubCoordMsgProc::on_interrupted(const ObInterruptCode &ic) const
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_dtl_proc.cpp/ObPxCreateBloomFilterChannelMsgP::process
+*/
 int ObPxSubCoordMsgProc::on_create_filter_ch_msg(
     const ObPxCreateBloomFilterChannelMsg &pkt) const
 {

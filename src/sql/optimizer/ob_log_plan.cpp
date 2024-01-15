@@ -11232,6 +11232,14 @@ int ObLogPlan::generate_plan()
   return ret;
 }
 
+/** Note:外部接口
+ * 负责生成本地串行计划
+ * 调用:
+ * sql/optimizer/ob_optimizer.cc/ObOptimizer::get_optimization_cost
+ * sql/optimizer/ob_optimizer.cc/ObOptimizer::get_cte_optimization_cost
+ * sql/optimizer/ob_optimizer.cc/ObOptimizer::generate_plan_for_temp_table
+ * sql/optimizer/ob_select_log_plan.cpp/ObSelectLogPlan::generate_child_plan_for_set
+*/
 int ObLogPlan::generate_raw_plan()
 {
   int ret = OB_SUCCESS;

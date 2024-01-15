@@ -16,7 +16,12 @@
 #include "share/stat/ob_stat_define.h"
 #include "sql/engine/ob_exec_context.h"
 #include "share/stat/ob_stat_item.h"
-
+/** Note:pl存储过程实现
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp
+ * sql/engine/cmd/ob_analyse_executor.cpp
+ * sql/engine/opt_statistics/ob_optimizer_stats_gathering_op.cpp
+*/
 namespace oceanbase {
 using namespace sql;
 namespace common {

@@ -32,6 +32,14 @@ namespace common {
  *  构造表级别统计信息的收集 SQL
  * @return
  */
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_table_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_schema_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_table_stats_with_default_param
+ * sql/engine/cmd/ob_analyze_executor.cpp/ObAnalyzeExecutor::execute
+*/
 int ObDbmsStatsExecutor::gather_table_stats(ObExecContext &ctx,
                                             const ObTableStatParam &param)
 {
@@ -53,7 +61,7 @@ int ObDbmsStatsExecutor::gather_table_stats(ObExecContext &ctx,
   } else if (param.need_estimate_block_ &&
              share::schema::ObTableType::EXTERNAL_TABLE != param.ref_table_type_ &&
              OB_FAIL(ObBasicStatsEstimator::estimate_block_count(ctx, param,
-                                                                 extra.partition_id_block_map_))) {
+                                                                 extra.partition_id_block_map_))) {// Note:
     LOG_WARN("failed to estimate block count", K(ret));
   }
   if (OB_SUCC(ret) && param.subpart_stat_param_.need_modify_) {
@@ -108,7 +116,7 @@ int ObDbmsStatsExecutor::gather_table_stats(ObExecContext &ctx,
     if (!param.is_temp_table_ &&
         OB_FAIL(ObDbmsStatsHistoryManager::get_history_stat_handles(ctx, param,
                                                                     history_tab_handles,
-                                                                    history_col_handles))) {
+                                                                    history_col_handles))) {// Note:
       LOG_WARN("failed to get history stat handles", K(ret));
     } else if (OB_FAIL(ObDbmsStatsUtils::split_batch_write(ctx, all_tstats, all_cstats))) {
       LOG_WARN("failed to split batch write", K(ret));
@@ -118,7 +126,7 @@ int ObDbmsStatsExecutor::gather_table_stats(ObExecContext &ctx,
                                                                    history_col_handles))) {
       LOG_WARN("failed to batch write history stats", K(ret));
     } else if (share::schema::ObTableType::EXTERNAL_TABLE != param.ref_table_type_ &&
-               OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {
+               OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {// Note:
       LOG_WARN("failed to update last modified count", K(ret));
     } else {/*do nothing*/}
   }
@@ -152,7 +160,7 @@ int ObDbmsStatsExecutor::do_gather_stats(ObExecContext &ctx,
     ObHybridHistEstimator hybrid_est(ctx, *param.allocator_);
     if (OB_FAIL(basic_est.estimate(param, extra, opt_stats))) {
       LOG_WARN("failed to estimate basic statistics", K(ret));
-    } else if (extra.need_histogram_ && OB_FAIL(hybrid_est.estimate(param, extra, opt_stats))) {
+    } else if (extra.need_histogram_ && OB_FAIL(hybrid_est.estimate(param, extra, opt_stats))) {// Note:
       LOG_WARN("failed to estimate hybrid histogram", K(ret));
     } else {/*do nothing*/}
   }
@@ -222,6 +230,12 @@ int ObDbmsStatsExecutor::check_all_cols_range_skew(const ObTableStatParam &param
  *  set table stats
  * @return
  */
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::set_table_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::set_index_stats
+*/
 int ObDbmsStatsExecutor::set_table_stats(ObExecContext &ctx,
                                          const ObSetTableStatParam &param)
 {
@@ -261,7 +275,7 @@ int ObDbmsStatsExecutor::set_table_stats(ObExecContext &ctx,
     } else if (!param.table_param_.is_temp_table_ &&
                OB_FAIL(ObDbmsStatsHistoryManager::get_history_stat_handles(ctx, param.table_param_,
                                                                            history_tab_handles,
-                                                                           history_col_handles))) {
+                                                                           history_col_handles))) {// Note:
       LOG_WARN("failed to get history stat handles", K(ret));
     } else if (OB_FAIL(mgr.update_table_stat(param.table_param_.tenant_id_,
                                              &table_stat,
@@ -283,7 +297,12 @@ int ObDbmsStatsExecutor::set_table_stats(ObExecContext &ctx,
  *  set column stats
  * @return
  */
-
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * ob_dbms_stats.cpp/ObDbmsStats::set_column_stats
+*/
 int ObDbmsStatsExecutor::set_column_stats(ObExecContext &ctx,
                                           const ObSetColumnStatParam &param)
 {
@@ -344,7 +363,7 @@ int ObDbmsStatsExecutor::set_column_stats(ObExecContext &ctx,
                                                   trans,
                                                   column_stats,
                                                   true,
-                                                  CREATE_OBJ_PRINT_PARAM(ctx.get_my_session())))) {
+                                                  CREATE_OBJ_PRINT_PARAM(ctx.get_my_session())))) {// Note:
           LOG_WARN("failed to update column stats", K(ret));
         } else {
           LOG_TRACE("end set column stats", K(param), K(*col_stat));
@@ -442,6 +461,15 @@ int ObDbmsStatsExecutor::do_set_column_stats(const ObSetColumnStatParam &param,
   return ret;
 }
 
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::delete_table_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::delete_schema_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::delete_index_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::delete_table_index_stats
+ * sql/engine/cmd/ob_analyze_executor.cpp/ObAnalyzeExecutor::execute
+*/
 int ObDbmsStatsExecutor::delete_table_stats(ObExecContext &ctx,
                                             const ObTableStatParam &param,
                                             const bool cascade_columns)
@@ -503,7 +531,7 @@ int ObDbmsStatsExecutor::delete_table_stats(ObExecContext &ctx,
     if (!param.is_temp_table_ &&
         OB_FAIL(ObDbmsStatsHistoryManager::get_history_stat_handles(ctx, param,
                                                                     history_tab_handles,
-                                                                    history_col_handles))) {
+                                                                    history_col_handles))) {// Note:
       LOG_WARN("failed to get history stat handles", K(ret));
     } else if (OB_FAIL(ObOptStatManager::get_instance().delete_table_stat(param.tenant_id_,
                                                                           table_id,
@@ -702,7 +730,7 @@ int ObDbmsStatsExecutor::reset_table_locked_state(ObExecContext &ctx,
   } else if (OB_FAIL(ObDbmsStatsLockUnlock::get_insert_locked_type_sql(param,
                                                                        no_stats_partition_ids,
                                                                        part_stattypes,
-                                                                       insert_sql))) {
+                                                                       insert_sql))) {// Note:
     LOG_WARN("failed to get insert locked type sql", K(ret));
   } else if (OB_FAIL(mysql_proxy->write(param.tenant_id_, insert_sql.ptr(), affected_rows))) {
     LOG_WARN("fail to exec sql", K(insert_sql), K(ret));
@@ -711,6 +739,13 @@ int ObDbmsStatsExecutor::reset_table_locked_state(ObExecContext &ctx,
   }
   return ret;
 }
+
+/** Note:外部接口
+ * 
+ * 调用:
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_index_stats
+ * pl/sys_package/ob_dbms_stats.cpp/ObDbmsStats::gather_table_index_stats
+*/
 
 int ObDbmsStatsExecutor::gather_index_stats(ObExecContext &ctx,
                                             const ObTableStatParam &param)
@@ -727,7 +762,7 @@ int ObDbmsStatsExecutor::gather_index_stats(ObExecContext &ctx,
                                                    param.tenant_id_))) {
     LOG_WARN("failed to create hash map", K(ret));
   } else if (OB_FAIL(ObBasicStatsEstimator::estimate_block_count(ctx, param,
-                                                                 extra.partition_id_block_map_))) {
+                                                                 extra.partition_id_block_map_))) {// Note:
     LOG_WARN("failed to estimate block count", K(ret));
   }
   if (OB_SUCC(ret) && param.subpart_stat_param_.need_modify_) {
@@ -803,6 +838,12 @@ int ObDbmsStatsExecutor::do_gather_index_stats(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 功能:
+ * 
+ * 调用:
+ * sql/engine/opt_statistics/ob_optimizer_stats_gathering_op.cpp/ObOptimizerStatsGatheringOp::msg_end
+*/
 int ObDbmsStatsExecutor::update_online_stat(ObExecContext &ctx,
                                             ObTableStatParam &param,
                                             share::schema::ObSchemaGetterGuard *schema_guard,
@@ -818,7 +859,7 @@ int ObDbmsStatsExecutor::update_online_stat(ObExecContext &ctx,
   ObSEArray<ObOptColumnStatHandle, 4> history_col_handles;
   ObSEArray<ObOptTableStat *, 4>  table_stats;
   ObSEArray<ObOptColumnStat *, 4> column_stats;
-  if (OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, param))) {
+  if (OB_FAIL(ObDbmsStatsLockUnlock::check_stat_locked(ctx, param))) {// Note:
     if (ret == OB_ERR_DBMS_STATS_PL) {
       param.global_stat_param_.reset_gather_stat();
       param.part_stat_param_.reset_gather_stat();
@@ -831,7 +872,7 @@ int ObDbmsStatsExecutor::update_online_stat(ObExecContext &ctx,
   } else if (OB_FAIL(ObDbmsStatsHistoryManager::get_history_stat_handles(ctx,
                                                                          param,
                                                                          history_tab_handles,
-                                                                         history_col_handles))) {
+                                                                         history_col_handles))) {// Note:
     LOG_WARN("failed to get history stat handles", K(ret));
   } else if (OB_FAIL(ObDbmsStatsUtils::merge_tab_stats(param,
                                                        online_table_stats,
@@ -850,7 +891,7 @@ int ObDbmsStatsExecutor::update_online_stat(ObExecContext &ctx,
                                                                  history_tab_handles,
                                                                  history_col_handles))) {
     LOG_WARN("failed to batch write history stats", K(ret));
-  } else if (OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {
+  } else if (OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {// Note:
     //update history
     LOG_WARN("failed to update last modified count", K(ret));
   } else if (OB_FAIL(pl::ObDbmsStats::update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), param))) {

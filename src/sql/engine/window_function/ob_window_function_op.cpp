@@ -3262,6 +3262,7 @@ int ObWindowFunctionOp::get_participator_whole_msg(
         ObWindowFunctionOpInput *op_input = static_cast<ObWindowFunctionOpInput*>(input_);
         ObPxDatahubDataProvider *provider = nullptr;
         ObReportingWFWholeMsg::WholeMsgProvider *whole_msg_provider = nullptr;
+        // Note:ob_sqc_ctx.cpp接口
         if (OB_FAIL(proxy.sqc_ctx_.get_whole_msg_provider(
                     MY_SPEC.id_, dtl::DH_SECOND_STAGE_REPORTING_WF_WHOLE_MSG, provider))) {
           LOG_WARN("fail get provider", K(ret));

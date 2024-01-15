@@ -21,6 +21,13 @@
 #include "sql/engine/ob_physical_plan.h"
 #include "lib/lock/ob_scond.h"
 
+/** Note:并行查询中生成Worker相关接口
+ * 调用:
+ * ob_dfo.cpp接口,管理DFO
+ * ob_px_task_process.cpp,管理Task执行
+ * 被调用:
+ * ob_px_sub_coord.cpp,SubPlan协调者构造Worker
+*/
 namespace oceanbase
 {
 namespace omt { class ObPxPool; }

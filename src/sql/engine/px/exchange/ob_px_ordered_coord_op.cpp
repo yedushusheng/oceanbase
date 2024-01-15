@@ -128,6 +128,7 @@ int ObPxOrderedCoordOp::inner_get_next_row()
     ret = OB_ITER_END;
   } else if (OB_UNLIKELY(!first_row_fetched_)) {
     // 驱动初始 DFO 的分发
+    // Note:ob_px_scheduler.cpp接口
     if (OB_FAIL(msg_proc_.startup_msg_loop(ctx_))) {
       LOG_WARN("initial dfos NOT dispatched successfully", K(ret));
     }
@@ -180,6 +181,7 @@ int ObPxOrderedCoordOp::inner_get_next_row()
     // 2. all SQC report worker execution finish
     if (OB_SUCCESS == ret) {
       if (all_rows_finish_ && coord_info_.all_threads_finish_) {
+        // Note:ob_px_scheduler.cpp接口
         (void) msg_proc_.on_process_end(ctx_);
         ret = OB_ITER_END;
         LOG_TRACE("all rows received, all sqcs reported, qc says: byebye!", K(ret));

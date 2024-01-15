@@ -21,7 +21,8 @@
 #include "lib/hash/ob_link_hashmap.h"
 #include "ob_px_rpc_proxy.h"
 #include "share/ob_alive_server_tracer.h"
-
+/** Note:
+*/
 namespace oceanbase
 {
 using namespace share;

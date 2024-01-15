@@ -15,7 +15,8 @@
 
 #include "share/stat/ob_stat_define.h"
 #include "share/rc/ob_tenant_base.h"
-
+/** Note:统计信息直方图(Top-K)
+*/
 namespace oceanbase
 {
 namespace common

@@ -945,6 +945,10 @@ void ObPxRpcInitTaskArgs::set_deserialize_param(ObExecContext &exec_ctx,
   des_allocator_ = des_allocator;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_worker.cpp/PxWorkerFunctor::operator
+*/
 int ObPxRpcInitTaskArgs::init_deserialize_param(lib::MemoryContext &mem_context, const observer::ObGlobalContext &gctx)
 {
   int ret = OB_SUCCESS;
@@ -964,7 +968,10 @@ int ObPxRpcInitTaskArgs::init_deserialize_param(lib::MemoryContext &mem_context,
   return ret;
 }
 
-
+/** Note:外部接口
+ * 调用:
+ * ob_px_worker.cpp/PxWorkerFunctor::operator
+*/
 int ObPxRpcInitTaskArgs::deep_copy_assign(ObPxRpcInitTaskArgs &src,
                                           ObIAllocator &alloc)
 {
@@ -999,7 +1006,11 @@ int ObPxRpcInitTaskArgs::deep_copy_assign(ObPxRpcInitTaskArgs &src,
   return ret;
 }
 
-
+/** Note:外部接口
+ * 调用:
+ * ob_dfo_mgr.cpp/ObDfoMgr::destroy
+ * ob_dfo_mgr.cpp/ObDfoMgr::add_dfo_edge
+*/
 void ObDfo::reset_resource(ObDfo *dfo)
 {
   if (nullptr != dfo) {
@@ -1018,6 +1029,10 @@ void ObDfo::reset_resource(ObDfo *dfo)
   }
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_dfo_scheduler.cpp/ObDfoSchedulerBasic::dispatch_root_dfo_channel_info
+*/
 bool ObDfo::check_root_valid()
 {
   bool invalid = false;

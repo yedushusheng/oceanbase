@@ -26,7 +26,9 @@
 #include "lib/compress/ob_compress_util.h"
 #include "storage/tx/ob_trans_define.h"
 #include "sql/engine/ob_exec_feedback_info.h"
-
+/** Note:DTL消息接口
+ * 负责数据传输过程中的消息通信
+*/
 namespace oceanbase
 {
 namespace sql

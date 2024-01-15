@@ -18,7 +18,14 @@
 #include "sql/engine/px/ob_px_util.h"
 #include "sql/engine/px/ob_granule_iterator_op.h"
 #include "observer/virtual_table/ob_virtual_table_iterator_factory.h"
-
+/** Note:Task处理接口
+ * 任务:任务是执行计划片段的实例化表示,最重要的是它含有一个Sender和至少一个Receiver.
+ * 
+ * 调用:
+ * 
+ * 被调用:
+ * ob_px_worker.cpp,Worker管理task使用
+*/
 namespace oceanbase
 {
 namespace sql

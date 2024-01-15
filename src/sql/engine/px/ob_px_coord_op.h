@@ -25,6 +25,23 @@
 #include "sql/dtl/ob_dtl_local_first_buffer_manager.h"
 #include "sql/dtl/ob_dtl_task.h"
 
+/** Note:OB的调度逻辑封装到了ObPxCoord算子中(Exchange算子具体实现)
+ * 这里是Collector/Coordinator执行数据操作(op=Operation)的具体实现
+ * Query Coordinator(QC)
+ * 在分布式并行执行计划中,主控节点上的一个线程,用于调度、协调整体分布式并行执行计划的执行.
+ * 与之对应的是SQC(Sub Query Coordinator)
+ * QC:
+ * 创建SQC
+ * 下发配置信息创建Channel map逻辑通道
+ * 全局调度SQC
+ * SQC:接收调度消息,启动worker线程并对worker进行全周期管理
+ * 
+ * 它有两个子类ObPxFifoCoord,ObPxMergeSortCoord,调度逻辑都是一样的,区别是他们收取结果数据的方式不同
+ * 调用:
+ * ob_dfo_mgr.cc接口,管理DFO
+ * 被调用:
+ * 
+*/
 namespace oceanbase
 {
 namespace sql

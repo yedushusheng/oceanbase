@@ -38,7 +38,8 @@ namespace test
 {
   class ObLogPlanTest_ob_explain_test_Test;
 }
-
+/** Note:并行查询中生成逻辑子计划(LogicPlan)
+*/
 namespace oceanbase
 {
 

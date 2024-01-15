@@ -77,7 +77,7 @@ int ObIncrementalStatEstimator::derive_global_stat_by_direct_load(ObExecContext 
     } else if (param.part_level_ != share::schema::PARTITION_LEVEL_ONE &&
               param.part_level_ != share::schema::PARTITION_LEVEL_TWO) {
       //if we don't derive, we need update some cache info.
-      if (OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {
+      if (OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {// Note:
         LOG_WARN("failed to update last modified count", K(ret));
       } else if (OB_FAIL(pl::ObDbmsStats::update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), param))) {
         LOG_WARN("fail to update stat cache", K(ret));
@@ -126,7 +126,7 @@ int ObIncrementalStatEstimator::derive_global_stat_by_direct_load(ObExecContext 
           LOG_WARN("failed to calssify opt stat", K(ret));
         } else if (OB_FAIL(ObDbmsStatsUtils::split_batch_write(ctx, all_tstats, all_cstats))) {
           LOG_WARN("failed to split batch write", K(ret));
-        } else if (OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {
+        } else if (OB_FAIL(ObBasicStatsEstimator::update_last_modified_count(ctx, param))) {// Note:
           LOG_WARN("failed to update last modified count", K(ret));
         } else if (OB_FAIL(pl::ObDbmsStats::update_stat_cache(ctx.get_my_session()->get_rpc_tenant_id(), param))) {
           LOG_WARN("fail to update stat cache", K(ret));
@@ -329,7 +329,7 @@ int ObIncrementalStatEstimator::do_derive_part_stats_from_subpart_stats(
     if (OB_FAIL(gen_part_param(param, gather_hybrid_hist_opt_stats, part_param))) {
       LOG_WARN("failed to gen part param", K(ret));
     } else if (OB_FAIL(hybrid_est.estimate(part_param, extra,
-                                           gather_hybrid_hist_opt_stats))) {
+                                           gather_hybrid_hist_opt_stats))) {// Note:
       LOG_WARN("failed to estimate hybrid histogram", K(ret));
     } else {
       LOG_TRACE("succeed to gather partition hybrid hist", K(gather_hybrid_hist_opt_stats.count()));
@@ -648,7 +648,7 @@ int ObIncrementalStatEstimator::derive_global_col_stat(ObExecContext &ctx,
         ObSEArray<ObOptStat, 1> opt_stats;
         if (OB_FAIL(opt_stats.push_back(global_opt_stat))) {
           LOG_WARN("failed to push back opt stat", K(ret));
-        } else if (OB_FAIL(hybrid_est.estimate(param, extra, opt_stats))) {
+        } else if (OB_FAIL(hybrid_est.estimate(param, extra, opt_stats))) {// Note:
           LOG_WARN("failed to estimate hybrid histogram", K(ret));
         } else {
           LOG_TRACE("succeed to gather hybrid hist");

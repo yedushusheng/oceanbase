@@ -52,6 +52,11 @@ using namespace oceanbase::storage;
 
 // Note: 每个线程里的 Task 是对等的，唯一不同的是
 // 他们从 granule 中 "抢" 到的任务范围不同
+/** Note:外部接口
+ * 调用:
+ * ob_px_rpc_processor.cpp/ObInitSqcP::startup_normal_sqc
+ * ob_px_rpc_processor.cpp/ObInitFastSqcP::startup_normal_sqc
+*/
 int ObPxSubCoord::pre_process()
 {
   int ret = OB_SUCCESS;
@@ -123,6 +128,11 @@ int ObPxSubCoord::pre_process()
 // 这里有一个隐寓：当 SQC 收到这一类消息时，说明 QC 已经
 // 确认这个 DFO 中所有 SQC 都有足够资源来执行这个 DFO
 // 不会因为任何 SQC worker 资源不足而终止 SQC 执行
+/** Note:外部接口
+ * 调用:
+ * ob_px_rpc_processor.cpp/ObInitSqcP::startup_normal_sqc
+ * ob_px_rpc_processor.cpp/ObInitFastSqcP::startup_normal_sqc
+*/
 int ObPxSubCoord::try_start_tasks(int64_t &dispatch_worker_count, bool is_fast_sqc)
 {
   int ret = OB_SUCCESS;
@@ -134,6 +144,10 @@ int ObPxSubCoord::try_start_tasks(int64_t &dispatch_worker_count, bool is_fast_s
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_rpc_processor.cpp/ObInitSqcP::startup_normal_sqc
+*/
 void ObPxSubCoord::notify_dispatched_task_exit(int64_t dispatched_worker_count)
 {
   (void) thread_worker_factory_.join();
@@ -167,6 +181,10 @@ void ObPxSubCoord::notify_dispatched_task_exit(int64_t dispatched_worker_count)
   }
 }
 
+/** Note:内部函数
+ * 调用:
+ * ob_px_sqc_handler.cpp/ObPxSqcHandler::init_env
+*/
 int ObPxSubCoord::init_exec_env(ObExecContext &exec_ctx)
 {
   int ret = OB_SUCCESS;
@@ -188,6 +206,9 @@ int ObPxSubCoord::init_exec_env(ObExecContext &exec_ctx)
   return ret;
 }
 
+/** Note:内部函数
+ * 调用:
+*/
 int ObPxSubCoord::get_tsc_or_dml_op_tablets(
     ObOpSpec &root,
     const DASTabletLocIArray &tsc_locations,
@@ -217,6 +238,11 @@ int ObPxSubCoord::get_tsc_or_dml_op_tablets(
   return ret;
 }
 
+/** Note:内部函数
+ * 调用:
+ * ObPxSubCoord::pre_setup_op_input
+ * ObPxSubCoord::setup_op_input
+*/
 int ObPxSubCoord::setup_gi_op_input(ObExecContext &ctx,
     ObOpSpec &root,
     ObSqcCtx &sqc_ctx,
@@ -263,6 +289,10 @@ int ObPxSubCoord::setup_gi_op_input(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:外部接口
+ * 调用:
+ * ob_px_rpc_processor.cpp/ObInitSqcP::pre_setup_op_input
+*/
 int ObPxSubCoord::pre_setup_op_input(ObExecContext &ctx,
     ObOpSpec &root,
     ObSqcCtx &sqc_ctx,
@@ -295,6 +325,11 @@ int ObPxSubCoord::pre_setup_op_input(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:内部函数
+ * 调用:
+ * ObPxSubCoord::pre_process
+ * ObPxSubCoord::setup_op_input
+*/
 int ObPxSubCoord::setup_op_input(ObExecContext &ctx,
                                  ObOpSpec &root,
                                  ObSqcCtx &sqc_ctx,
@@ -560,11 +595,13 @@ int ObPxSubCoord::dispatch_tasks(ObPxRpcInitSqcArgs &sqc_arg, ObSqcCtx &sqc_ctx,
     LOG_WARN("Invalid sqc args", K(ret), K(sqc));
   } else if (is_fast_sqc) {
     dispatch_worker_count = 0;
+    // Note:如果是Fast-SQC,则分发到本地线程,不需要跨机器
     ret = dispatch_task_to_local_thread(sqc_arg, sqc_ctx, sqc);
   } else {
     // execute all task in thread pool, non-block call
     for (int64_t i = 0; OB_SUCC(ret) && i < sqc.get_task_count(); ++i) {
       sqc_arg.sqc_handler_->inc_ref_count();
+      // Note:跨机器
       ret = dispatch_task_to_thread_pool(sqc_arg, sqc_ctx, sqc, i);
       if (OB_SUCC(ret)) {
         ++dispatch_worker_count;
@@ -604,7 +641,7 @@ int ObPxSubCoord::dispatch_task_to_local_thread(ObPxRpcInitSqcArgs &sqc_arg,
   ObPxWorkerRunnable *worker = nullptr;
   if (OB_FAIL(ret)) {
     // fail
-  } else if (OB_ISNULL(worker = local_worker_factory_.create_worker())) {
+  } else if (OB_ISNULL(worker = local_worker_factory_.create_worker())) {// Note:
     ret = OB_ALLOCATE_MEMORY_FAILED;
     LOG_WARN("fail create new worker", K(sqc), K(ret));
   } else if (OB_FAIL(worker->run(args))) {
@@ -960,6 +997,10 @@ int ObPxSubCoord::rebuild_sqc_access_table_locations()
   return ret;
 }
 
+/** Note:内部函数
+ * 调用:
+ * ObPxSubCoord::setup_gi_op_input
+*/
 void ObPxSubCoord::try_get_dml_op(ObOpSpec &root, ObTableModifySpec *&dml_op)
 {
   if (1 == root.get_child_num()) {

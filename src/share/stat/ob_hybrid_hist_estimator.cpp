@@ -49,6 +49,14 @@ int ObHybridHistEstimator::add_stat_item(const T &item, ObIArray<ObStatItem *> &
 // union all
 // select hybrid_hist(c1,20)，hybrid_hist(c2,20)，.... from t1 partition(p2) simple ...
 // no need to hit plan cache or rewrite
+/** Note:外部接口
+ * 功能:
+ * 混合直方图(hybrid Histogram)
+ * 调用:
+ * ob_dbms_stats_executor.cpp/ObDbmsStatsExecutor::do_gather_stats
+ * ob_incremental_stat_estimator.cpp/ObIncrementalStatEstimator::do_derive_part_stats_from_subpart_stats
+ * ob_incremental_stat_estimator.cpp/ObIncrementalStatEstimator::derive_global_col_stat
+*/
 int ObHybridHistEstimator::estimate(const ObTableStatParam &param,
                                     ObExtraParam &extra,
                                     ObIArray<ObOptStat> &dst_opt_stats)
@@ -70,7 +78,7 @@ int ObHybridHistEstimator::estimate(const ObTableStatParam &param,
                                                param.column_params_.count(),
                                                src_col_stats))) {
     LOG_WARN("failed init col stats", K(ret));
-  } else if (FALSE_IT(get_max_num_buckets(param.column_params_, max_num_buckets))) {
+  } else if (FALSE_IT(get_max_num_buckets(param.column_params_, max_num_buckets))) {  // Note:获取max数
   } else {
     for (int64_t i = 0; OB_SUCC(ret) && i < dst_opt_stats.count(); ++i) {
       ObOptStat &dst_opt_stat = dst_opt_stats.at(i);
@@ -88,6 +96,7 @@ int ObHybridHistEstimator::estimate(const ObTableStatParam &param,
         bool need_sample = false;
         bool is_block_sample = false;
         double est_percent = 0.0;
+        // Note:计算百分比
         if (OB_FAIL(compute_estimate_percent(dst_opt_stat.table_stat_->get_row_count(),
                                              max_num_buckets,
                                              param.sample_info_,
