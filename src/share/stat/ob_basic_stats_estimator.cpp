@@ -42,6 +42,9 @@ int ObBasicStatsEstimator::add_stat_item(const T &item)
   return ret;
 }
 
+/** Note:外部接口
+ * 进行基本信息的相关估算
+*/
 int ObBasicStatsEstimator::estimate(const ObTableStatParam &param,
                                     const ObExtraParam &extra,
                                     ObIArray<ObOptStat> &dst_opt_stats)
@@ -116,7 +119,7 @@ int ObBasicStatsEstimator::estimate(const ObTableStatParam &param,
   if (OB_SUCC(ret)) {
     if (OB_FAIL(add_stat_item(ObStatAvgRowLen(&param, src_tab_stat, src_col_stats)))) {
       LOG_WARN("failed to add avg row size estimator", K(ret));
-    } else if (OB_FAIL(pack(raw_sql))) {
+    } else if (OB_FAIL(pack(raw_sql))) {  // Note:使用SQL方式获取统计信息
       LOG_WARN("failed to pack raw sql", K(ret));
     } else if (OB_FAIL(do_estimate(param.tenant_id_, raw_sql.string(), COPY_ALL_STAT,
                                    src_opt_stat, dst_opt_stats))) {

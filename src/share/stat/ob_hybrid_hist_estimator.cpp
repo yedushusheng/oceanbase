@@ -107,7 +107,7 @@ int ObHybridHistEstimator::estimate(const ObTableStatParam &param,
         } else if (need_sample && OB_FAIL(fill_sample_info(allocator,
                                                            est_percent,
                                                            is_block_sample,
-                                                           sample_hint))) {
+                                                           sample_hint))) {  // Note:组装SQL
           LOG_WARN("failed to fill sample info", K(ret));
         } else {/*do nothing*/}
         //2.add select item
