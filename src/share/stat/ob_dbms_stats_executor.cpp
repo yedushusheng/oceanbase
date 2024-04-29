@@ -806,6 +806,10 @@ int ObDbmsStatsExecutor::gather_index_stats(ObExecContext &ctx,
   return ret;
 }
 
+/** Note:内部调用
+ * 调用：
+ * ObDbmsStatsExecutor::gather_index_stats
+*/
 int ObDbmsStatsExecutor::do_gather_index_stats(ObExecContext &ctx,
                                                const ObTableStatParam &param,
                                                ObExtraParam &extra,

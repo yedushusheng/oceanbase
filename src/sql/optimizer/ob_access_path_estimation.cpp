@@ -1675,6 +1675,7 @@ int ObAccessPathEstimation::update_table_stat_info_by_dynamic_sampling(AccessPat
   return ret;
 }
 
+// Note:动态采样获取row_count信息
 int ObAccessPathEstimation::estimate_path_rowcount_by_dynamic_sampling(const uint64_t table_id,
                                                                        ObIArray<AccessPath *> &paths,
                                                                        const bool is_inner_path,
@@ -1724,6 +1725,7 @@ int ObAccessPathEstimation::estimate_path_rowcount_by_dynamic_sampling(const uin
           physical_row_count = logical_row_count;
         } else {
           logical_row_count = path_ds_result_item->stat_handle_.stat_->get_rowcount();
+          // Note:设置采样率
           double tmp_ratio = path_ds_result_item->stat_handle_.stat_->get_sample_block_ratio();
           logical_row_count =  logical_row_count != 0 ? logical_row_count : static_cast<int64_t>(100.0 / tmp_ratio);
           physical_row_count = logical_row_count;

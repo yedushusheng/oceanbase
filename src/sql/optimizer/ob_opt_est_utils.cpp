@@ -606,6 +606,7 @@ int ObOptEstObjToScalar::convert_objs_to_scalars(
   } else {
     bool with_min_max = (NULL != min);
     //check whether to use string conversion method : all string except for min / max
+    // Note:对于String类型的数值，在使用基础统计信息max-min估行的时候需要特殊处理
     bool null_first_check = !lib::is_oracle_mode() && start->is_null(); // for mysql
     bool null_last_check = lib::is_oracle_mode() && end->is_null(); // for oracle
     bool use_dynamic_base = (start->is_string_type() || start->is_min_value() || start->is_max_value() || null_first_check)

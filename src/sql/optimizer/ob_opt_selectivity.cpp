@@ -492,7 +492,84 @@ const OptColumnMeta* OptTableMetas::get_column_meta_by_table_id(const uint64_t t
   return column_meta;
 }
 
-
+/** Note:优化器选择率计算逻辑
+ * 主要就是根据条件判断选择率（基于基础统计信息或者直方图），进而计算每个索引的代价
+ * 最终选择一个代价最小的索引
+ * 调用关系:
+ * ObOptSelectivity::calculate_selectivity( 
+ * -- 先对复杂的一些查询谓词采用动态采样的方式获取
+ * calc_complex_predicates_selectivity_by_ds
+ * resursive_extract_valid_predicate_for_ds  -- 抽取谓词
+ * 	get_like_sel  --like
+ * 	ObOptSelectivity::add_valid_ds_qual -- 过滤一些不支持直接计算选择率的:not like/lnnvl/regexp
+ * ObOptSelectivity::calc_selectivity_by_dynamic_sampling
+ * 	ObDynamicSamplingUtils::get_ds_table_param
+ * 	add_ds_result_items
+ * 	estimate_table_rowcount  -- 估行
+ * check_qual_later_calculation  -- 遍历前面抽取的谓词
+ * is_simple_join_condition  -- 检查是否为简单的join
+ * extract_simple_cond_filters  --提取简单的条件过滤
+ * calculate_qual_selectivity
+ * calculate_qual_selectivity  -- 计算选择率
+ * get_agg_sel  -- AGG
+ * get_const_sel
+ * get_column_sel
+ * get_equal_sel  -- 等值关系计算选择率
+ * get_in_sel  -- IN
+ * ObOptSelectivity::get_range_cmp_sel  -- range
+ * get_like_sel  -- like
+ * get_btw_sel  -- between and 
+ * get_not_sel  -- not
+ * get_ne_sel  -- !=
+ * check_mutex_or  -- OR
+ * -- 任何处理不了的都采用默认0.5的采样率
+ * get_column_range_sel：获取列的范围查询的选择率
+ * check_column_in_current_level_stmt
+ * get_column_query_range
+ * 	is_in_range_optimization_enabled
+ * 	preliminary_extract_query_range  -- 抽取query range
+ * 		extract_valid_exprs -- 抽取有效的表达式
+ * 		preliminary_extract -- 逐一解析拆解后的谓词
+ * 			pre_extract_const_op
+ * 			pre_extract_basic_cmp
+ * 			pre_extract_ne_op
+ * 			pre_extract_is_op
+ * 			pre_extract_btw_op
+ * 			pre_extract_not_btw_op
+ * 			pre_extract_in_op
+ * 			pre_extract_not_in_op
+ * 			pre_extract_and_or_op
+ * 			pre_extract_geo_op
+ * 		or_range_graph  -- 继续执行集合的相关操作
+ * 		and_range_graph
+ * 	direct_get_tablet_ranges
+ * 		gen_simple_get_range
+ * 		gen_simple_scan_range
+ * 	final_extract_query_range
+ * 		definite_in_range_graph
+ * 	get_tablet_ranges
+ * get_column_ndv_and_nns -- 获取NDV和NOT NULL的选择率(nns)
+ * 	get_column_basic_info -- 获取基础列信息
+ * 		get_column_basic_from_meta  -- 从元数据读取row_count,ndv信息
+ * get_histogram_by_column  -- 获取直方图统计信息 
+ * 	ObOptStatManager::get_column_stat
+ * 		ObOptStatService::get_column_stat
+ * 			ObOptStatService::load_column_stat_and_put_cache
+ * 				ObOptStatSqlService::fetch_column_stat -- 组装SQL查询对应的直方图统计信息
+ * 					generate_specified_keys_list_str
+ * 					generate_key_index_map
+ * 					fill_column_stat
+ * 					fetch_histogram_stat
+ * get_column_hist_scale
+ * get_range_sel_by_histogram  -- 从直方图获取选择率
+ * 	get_range_pred_sel
+ * get_single_newrange_selectivity：简单range查询线性估算的逻辑
+ *       calc_column_range_selectivity
+ *           do_calc_range_selectivity：根据min-max计算选择率估行
+ * -- 多表join的情况计算选择率
+ * --单个join条件，直接计算选择率
+ * --多个连接条件，检查是否涉及联合主键
+*/
 int ObOptSelectivity::calculate_selectivity(const OptTableMetas &table_metas,
                                             const OptSelectivityCtx &ctx,
                                             const ObIArray<ObRawExpr*> &predicates,
@@ -2319,6 +2396,7 @@ int ObOptSelectivity::get_single_newrange_selectivity(const OptTableMetas &table
   return ret;
 }
 
+// Note:计算range查询的选择率
 int ObOptSelectivity::calc_column_range_selectivity(const OptTableMetas &table_metas,
                                                     const OptSelectivityCtx &ctx,
                                                     const ObRawExpr &column_expr,
@@ -2372,7 +2450,7 @@ int ObOptSelectivity::calc_column_range_selectivity(const OptTableMetas &table_m
                                                                     &minscalar, &maxscalar,
                                                                     &startscalar, &endscalar))) {
       LOG_WARN("failed to convert obj to scalars", K(ret));
-    } else if (OB_FAIL(do_calc_range_selectivity(minscalar.get_double(),
+    } else if (OB_FAIL(do_calc_range_selectivity(minscalar.get_double(),// Note:使用基础统计信息
                                                  maxscalar.get_double(),
                                                  startscalar,
                                                  endscalar,
